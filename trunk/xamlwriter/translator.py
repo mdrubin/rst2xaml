@@ -13,8 +13,6 @@ class XamlTranslator(NodeVisitor):
 
     def __init__(self, document):
         NodeVisitor.__init__(self, document)
-        print '******'
-        print document
         self.root = Node('Document')
         self.curnode = self.root
         self.context = []
