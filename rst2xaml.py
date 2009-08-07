@@ -21,8 +21,8 @@ rv = publish_string(source=input_data, writer=XamlWriter(),
                     settings_overrides=settings_overrides)
 
 output = rv.root.to_string()
-print output
+#print output
 
-#handle = open(sys.argv[2])
-#handle.write(rv.root.to_string())
-#handle.close()
+handle = open(sys.argv[2])
+handle.write(rv.root.to_string())
+handle.close()
