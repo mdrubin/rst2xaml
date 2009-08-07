@@ -2,6 +2,8 @@ import unittest
 
 from xamlwriter.node import ErrorNode, Node, OrderedDict, TextNode
 
+# Looks like I need to add indexing into nodes (just delegates to children)
+# Also I need to add len support
 
 class TestNode(unittest.TestCase):
     
@@ -115,4 +117,4 @@ class TestErrorNode(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+

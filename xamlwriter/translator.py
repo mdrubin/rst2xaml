@@ -57,24 +57,24 @@ class XamlTranslator(NodeVisitor):
         #'abbreviation': ('abbr', {}),
         #'acronym': ('acronym', {}),
         #'address': ('pre', {'class': 'address'}),
-        'block_quote': ('blockquote', {}),
-        'caption': ('p', {'class': 'caption'}),
-        'compound': ('div', {'class': 'compound'}),
+        'block_quote': ('Paragraph', {'TextIndent':"25"}),
+        #'caption': ('p', {'class': 'caption'}),
+        #'compound': ('div', {'class': 'compound'}),
         'emphasis': ('Italic', {}),
-        'field': ('tr', {}),
-        'field_body': ('td', {}),
-        'inline': ('span', {}),
-        'line_block': ('div', {'class': 'line-block'}),
-        'intro': ('intro', {}),
-        'transition': ('hr', {'class': 'docutils'}),
-        'superscript': ('sup', {}),
+        #'field': ('tr', {}),
+        #'field_body': ('td', {}),
+        #'inline': ('span', {}),
+        #'line_block': ('div', {'class': 'line-block'}),
+        #'intro': ('intro', {}),
+        #'transition': ('hr', {'class': 'docutils'}),
+        #'superscript': ('sup', {}),
         #'doctest': ('pre', {'class': 'doctest-block'}),
-        'rubric': ('p', {'class': 'rubric'}),
-        'title_reference': ('cite', {}),
-        'legend': ('div', {'class': 'legend'}),
-        'line_block': ('div', {'class': 'line-block'}),
-        'literal_block': ('pre', {'class': 'literal-block'}),
-        'definition_list': ('dl', {'class': 'docutils'}),
+        #'rubric': ('p', {'class': 'rubric'}),
+        #'title_reference': ('cite', {}),
+        #'legend': ('div', {'class': 'legend'}),
+        #'line_block': ('div', {'class': 'line-block'}),
+        #'literal_block': ('pre', {'class': 'literal-block'}),
+        #'definition_list': ('dl', {'class': 'docutils'}),
     }
 
     def dispatch_visit(self, node):
@@ -474,7 +474,7 @@ class XamlTranslator(NodeVisitor):
         elif isinstance(node.parent, nodes.table):
             self.begin_node(node, 'caption')
         elif isinstance(node.parent, nodes.document):
-            self.begin_node(node, 'h1', CLASS='title')
+            self.begin_node(node, 'Paragraph', FontSize="18")
         else:
             assert isinstance(node.parent, nodes.section)
             h_level = self.section_level + self.initial_header_level - 1
@@ -499,7 +499,7 @@ class XamlTranslator(NodeVisitor):
     def visit_line(self, node):
         self.begin_node(node, 'div', CLASS='line')
         if not len(node):
-            self.add_node('br')
+            self.add_node('LineBreak')
 
     def depart_line(self, node):
         self.end_node()
@@ -555,9 +555,11 @@ class XamlTranslator(NodeVisitor):
         if node.hasattr('line'):
             line = ', line %s' % node['line']
         
-        #  The text should be handled as a paragraph but we handle it here using MarkupErrorElement
+        #  The text should be handled as a paragraph but we handle it here using ErrorNode
         text = node[0][0].astext()
-        message = 'System Message: %s/%s %s, %s\n' % (node['type'], node['level'], line, text)
+        message = 'System Message: %s/%s %s, %s\n' % (node['type'], 
+                                                      node['level'], 
+                                                      line, text)
         
         new_node = ErrorNode(message)
         new_node.parent = self.curnode
@@ -566,3 +568,15 @@ class XamlTranslator(NodeVisitor):
         
         self.end_node()
         raise nodes.SkipNode
+
+"""
+    <Paragraph>
+      <Run Typography.Variants="Superscript">This text is Superscripted.</Run> This text isn't.
+    </Paragraph>
+    <Paragraph>
+      <Run Typography.Variants="Subscript">This text is Subscripted.</Run> This text isn't.
+    </Paragraph>
+    <Paragraph>
+      If a font does not support a particular form (such as Superscript) a default font form will be displayed.
+    </Paragraph>
+"""
