@@ -11,7 +11,7 @@ if len(sys.argv) != 3:
     sys.exit(1)
     
 input_data = open(sys.argv[1]).read()
-print input_data
+#print input_data
 
 
 settings_overrides = {
