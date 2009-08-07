@@ -12,6 +12,7 @@ class TestNode(unittest.TestCase):
         self.assertEqual(node.children, [])
         self.assertEqual(node.parent, None)
 
+
     def testEquality(self):
         node = Node('foo')
         self.assertEqual(node, Node('foo'))
@@ -30,8 +31,10 @@ class TestNode(unittest.TestCase):
         node2.children.append(Node('bar'))
         self.assertEqual(node, node2)
 
+
     def testHash(self):
         self.assertRaises(TypeError, lambda: hash(Node('foo')))
+
 
     def testComparison(self):
         node = Node('foo')
@@ -60,6 +63,7 @@ class TestNode(unittest.TestCase):
     def testToStringAttributesXmlEscape(self):
         # test escaping xml characters in attributes
         self.fail()
+
 
 
 class TestTextNode(unittest.TestCase):
