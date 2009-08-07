@@ -1,6 +1,6 @@
 import unittest
 
-from xamlwriter import XamlTranslator
+from xamlwriter.translator import XamlTranslator
 from xamlwriter.node import Node, TextNode
 
 
