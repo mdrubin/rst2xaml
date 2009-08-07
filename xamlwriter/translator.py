@@ -13,7 +13,9 @@ class XamlTranslator(NodeVisitor):
 
     def __init__(self, document):
         NodeVisitor.__init__(self, document)
-        self.root = Node(None)
+        print '******'
+        print document
+        self.root = Node('Document')
         self.curnode = self.root
         self.context = []
         self.compact_simple = None
@@ -28,11 +30,11 @@ class XamlTranslator(NodeVisitor):
         for name, value in more_attributes.iteritems():
             attributes[name.lower()] = value
         if node is not None:
-            classes = node.get('classes', [])
-            if 'class' in attributes:
-                classes.append(attributes['class'])
-            if classes:
-                attributes['class'] = ' '.join(classes)
+            #classes = node.get('classes', [])
+            #if 'class' in attributes:
+            #    classes.append(attributes['class'])
+            #if classes:
+            #    attributes['class'] = ' '.join(classes)
             if node.has_key('ids') and node['ids']:
                 # support only one ID
                 attributes['id'] = node['ids'][0]
@@ -44,10 +46,7 @@ class XamlTranslator(NodeVisitor):
         self.curnode = self.curnode.parent
 
     def add_text(self, text):
-        if not self.curnode.children:
-            self.curnode.text += text
-        else:
-            self.curnode.children[-1].tail += text
+        self.curnode.children.append(TextNode(text))
 
     def unknown_visit(self, node):
         return
@@ -56,14 +55,14 @@ class XamlTranslator(NodeVisitor):
         return
 
     trivial_nodes = {
-        'strong': ('strong', {}),
-        'abbreviation': ('abbr', {}),
-        'acronym': ('acronym', {}),
-        'address': ('pre', {'class': 'address'}),
+        'strong': ('Bold', {}),
+        #'abbreviation': ('abbr', {}),
+        #'acronym': ('acronym', {}),
+        #'address': ('pre', {'class': 'address'}),
         'block_quote': ('blockquote', {}),
         'caption': ('p', {'class': 'caption'}),
         'compound': ('div', {'class': 'compound'}),
-        'emphasis': ('em', {}),
+        'emphasis': ('Italic', {}),
         'field': ('tr', {}),
         'field_body': ('td', {}),
         'inline': ('span', {}),
@@ -71,7 +70,7 @@ class XamlTranslator(NodeVisitor):
         'intro': ('intro', {}),
         'transition': ('hr', {'class': 'docutils'}),
         'superscript': ('sup', {}),
-        'doctest': ('pre', {'class': 'doctest-block'}),
+        #'doctest': ('pre', {'class': 'doctest-block'}),
         'rubric': ('p', {'class': 'rubric'}),
         'title_reference': ('cite', {}),
         'legend': ('div', {'class': 'legend'}),
@@ -100,8 +99,8 @@ class XamlTranslator(NodeVisitor):
         else:
             getattr(self, 'depart_' + node_name, self.unknown_departure)(node)
 
-    def visit_zeml(self, node):
-        node = copy.deepcopy(node['zeml'])
+    def visit_xaml(self, node):
+        node = copy.deepcopy(node['xaml'])
         node.parent = self.curnode
         self.curnode.children.append(node)
         raise SkipNode
@@ -168,7 +167,7 @@ class XamlTranslator(NodeVisitor):
         if self.should_be_compact_paragraph(node):
             self.context.append(False)
         else:
-            self.begin_node(node, 'p')
+            self.begin_node(node, 'Paragraph')
             self.context.append(True)
 
     def depart_paragraph(self, node):
