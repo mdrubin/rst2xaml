@@ -26,7 +26,7 @@ class XamlTranslator(NodeVisitor):
         new_node = Node(tagname)
         attributes = new_node.attributes
         for name, value in more_attributes.iteritems():
-            attributes[name.lower()] = value
+            attributes[name] = value
         if node is not None:
             #classes = node.get('classes', [])
             #if 'class' in attributes:
@@ -162,7 +162,7 @@ class XamlTranslator(NodeVisitor):
         return False
 
     def visit_paragraph(self, node):
-        if self.should_be_compact_paragraph(node):
+        if self.should_be_compact_paragraph(node) or self.curnode.name == 'Paragraph':
             self.context.append(False)
         else:
             self.begin_node(node, 'Paragraph')
