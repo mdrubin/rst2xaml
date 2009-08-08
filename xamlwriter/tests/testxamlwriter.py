@@ -56,7 +56,7 @@ class TestXamlWriter(unittest.TestCase):
     
         
     def testBlockquote(self):
-        tree = tree_from_string('Hello\n    foo\n')
+        tree = tree_from_string('Hello\n\n    foo\n')
         
         node = Node('Document')
         para = Node('Paragraph')
