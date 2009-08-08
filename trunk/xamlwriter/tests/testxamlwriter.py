@@ -53,6 +53,22 @@ class TestXamlWriter(unittest.TestCase):
         para.children[0].children.append(TextNode('Hello'))
         node.children.append(para)
         self.assertEqual(tree.to_string(), node.to_string())
+    
+        
+    def testBlockquote(self):
+        tree = tree_from_string('Hello\n    foo\n')
+        
+        node = Node('Document')
+        para = Node('Paragraph')
+        para.children.append(TextNode('Hello'))
+        node.children.append(para)
+        
+        quote = Node('Paragraph')
+        quote.attributes['TextIndent'] = "25"
+        quote.children.append(TextNode('Hello'))
+        node.children.append(quote)
+        
+        self.assertEqual(tree.to_string(), node.to_string())
 
 
 if __name__ == '__main__':
