@@ -27,15 +27,16 @@ class XamlTranslator(NodeVisitor):
         attributes = new_node.attributes
         for name, value in more_attributes.iteritems():
             attributes[name] = value
-        if node is not None:
+        if node is not None: 
+            pass
             #classes = node.get('classes', [])
             #if 'class' in attributes:
             #    classes.append(attributes['class'])
             #if classes:
             #    attributes['class'] = ' '.join(classes)
-            if node.has_key('ids') and node['ids']:
-                # support only one ID
-                attributes['id'] = node['ids'][0]
+            #if node.has_key('ids') and node['ids']:
+            #    # support only one ID
+            #    attributes['id'] = node['ids'][0]
         new_node.parent = self.curnode
         self.curnode.children.append(new_node)
         self.curnode = new_node
@@ -45,6 +46,11 @@ class XamlTranslator(NodeVisitor):
 
     def add_text(self, text):
         self.curnode.children.append(TextNode(text))
+
+    def add_node(self, name, text='', **attributes):
+        self.begin_node(None, name, **attributes)
+        self.add_text(text)
+        self.end_node()
 
     def unknown_visit(self, node):
         return
@@ -103,12 +109,16 @@ class XamlTranslator(NodeVisitor):
         self.curnode.children.append(node)
         raise SkipNode
 
-    def visit_citation_reference(self, node):
-        self.begin_node(node, 'a', CLASS='citation-reference', href='#'+node['refid'])
-        self.add_text('[')
-    def depart_citation_reference(self, node):
-        self.add_text(']')
-        self.end_node()
+    def visit_paragraph(self, node):
+        if self.should_be_compact_paragraph(node) or self.curnode.name == 'Paragraph':
+            self.context.append(False)
+        else:
+            self.begin_node(node, 'Paragraph')
+            self.context.append(True)
+
+    def depart_paragraph(self, node):
+        if self.context.pop():
+            self.end_node()
 
     def set_class_on_child(self, node, class_, index=0):
         """
@@ -126,9 +136,12 @@ class XamlTranslator(NodeVisitor):
         self.set_class_on_child(node, 'first', 0)
         self.set_class_on_child(node, 'last', -1)
 
-    def add_node(self, name, text='', **attributes):
-        self.begin_node(None, name, **attributes)
-        self.add_text(text)
+    def visit_citation_reference(self, node):
+        self.begin_node(node, 'a', CLASS='citation-reference', href='#'+node['refid'])
+        self.add_text('[')
+        
+    def depart_citation_reference(self, node):
+        self.add_text(']')
         self.end_node()
 
     def visit_definition(self, node):
@@ -160,27 +173,6 @@ class XamlTranslator(NodeVisitor):
         Determine if the <p> tags around paragraph ``node`` can be omitted.
         """
         return False
-
-    def visit_paragraph(self, node):
-        if self.should_be_compact_paragraph(node) or self.curnode.name == 'Paragraph':
-            self.context.append(False)
-        else:
-            self.begin_node(node, 'Paragraph')
-            self.context.append(True)
-
-    def depart_paragraph(self, node):
-        if self.context.pop():
-            self.end_node()
-
-    def visit_raw(self, node):
-        if 'html' in node.get('format', '').split():
-            # not just using a HTMLElement so that the elements in here
-            # can be sanitized in comments
-            newnode = parse_html(node.astext())
-            for child in newnode.children:
-                child.parent = self.curnode
-                self.curnode.children.append(child)
-        raise SkipNode
 
     def visit_classifier(self, node):
         self.add_node('span', ' : ', CLASS="classifier-delimiter")
