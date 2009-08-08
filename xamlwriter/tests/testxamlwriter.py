@@ -65,7 +65,7 @@ class TestXamlWriter(unittest.TestCase):
         
         quote = Node('Paragraph')
         quote.attributes['TextIndent'] = "25"
-        quote.children.append(TextNode('Hello'))
+        quote.children.append(TextNode('foo'))
         node.children.append(quote)
         
         self.assertEqual(tree.to_string(), node.to_string())
