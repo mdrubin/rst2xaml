@@ -1,8 +1,10 @@
+#!/usr/bin/env python
+
 import sys
 
 from docutils.core import publish_string
-from xamlwriter.translator import XamlTranslator
 from xamlwriter.writer import XamlWriter
+
 
 USAGE = "rst2xaml input_file output_file"
 
