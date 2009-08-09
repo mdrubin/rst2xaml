@@ -41,6 +41,8 @@ class Node(object):
         children_string = "".join(node.to_string() for node in self.children)
         return '<%s>%s</%s>' % (name + attribute_string, children_string, self.name)
 
+    # Hmmm...
+    __repr__ = to_string
 
 
 class TextNode(object):
@@ -62,6 +64,10 @@ class TextNode(object):
 
     def to_string(self):
         return self.data
+
+    # Hmmm...
+    __repr__ = to_string
+
 
 
 class ErrorNode(Node):

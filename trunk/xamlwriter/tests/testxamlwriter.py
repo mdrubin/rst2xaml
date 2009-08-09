@@ -30,7 +30,7 @@ class TestXamlWriter(unittest.TestCase):
         node = Node('Document')
         node.children.append(Node('Paragraph'))
         node.children[0].children.append(TextNode('Hello'))
-        self.assertEqual(tree.to_string(), node.to_string())
+        self.assertEqual(tree, node)
     
         
     def testItalics(self):
@@ -41,7 +41,7 @@ class TestXamlWriter(unittest.TestCase):
         para.children.append(Node('Italic'))
         para.children[0].children.append(TextNode('Hello'))
         node.children.append(para)
-        self.assertEqual(tree.to_string(), node.to_string())
+        self.assertEqual(tree, node)
     
         
     def testBold(self):
@@ -52,7 +52,7 @@ class TestXamlWriter(unittest.TestCase):
         para.children.append(Node('Bold'))
         para.children[0].children.append(TextNode('Hello'))
         node.children.append(para)
-        self.assertEqual(tree.to_string(), node.to_string())
+        self.assertEqual(tree, node)
     
         
     def testBlockquote(self):
@@ -68,7 +68,7 @@ class TestXamlWriter(unittest.TestCase):
         quote.children.append(TextNode('foo'))
         node.children.append(quote)
         
-        self.assertEqual(tree.to_string(), node.to_string())
+        self.assertEqual(tree, node)
 
 
 if __name__ == '__main__':
