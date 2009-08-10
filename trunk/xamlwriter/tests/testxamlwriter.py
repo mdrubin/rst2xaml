@@ -1,6 +1,6 @@
 import unittest
 
-from xamlwriter.writer import XamlWriter
+from xamlwriter.writer import XamlWriter, publish_xaml
 from xamlwriter.node import Node, TextNode
 
 from docutils.core import publish_string
@@ -69,6 +69,13 @@ class TestXamlWriter(unittest.TestCase):
         node.children.append(quote)
         
         self.assertEqual(tree, node)
+
+
+    def testRawXaml(self):
+        data = '.. raw:: xaml\n\n   foo'
+        output = publish_xaml(data)
+        expected = '<Document>foo</Document>'
+        self.assertEqual(output, expected)
 
 
 if __name__ == '__main__':

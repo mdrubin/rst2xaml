@@ -15,11 +15,12 @@ web with a Python interactive interpreter running in the browser. This will also
 require XAML output from Pygments."""
 
 
-setup(name='xamlwriter',
-      version=version,
-      description=description,
-      author="Michael Foord",
-      author_email="michael@voidspace.org.uk",
-      packages= ['xamlwriter', 'xamlwriter.tests', 'xamlwriter.modules'],
-      scripts=['rst2xaml.py']
-      )
+setup(
+    name='xamlwriter',
+    version=version,
+    description=description,
+    author="Michael Foord",
+    author_email="michael@voidspace.org.uk",
+    packages= ['xamlwriter', 'xamlwriter.tests', 'xamlwriter.modules'],
+    scripts=['rst2xaml.py']
+)
