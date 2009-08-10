@@ -2,8 +2,7 @@
 
 import sys
 
-from docutils.core import publish_string
-from xamlwriter.writer import XamlWriter
+from xamlwriter.writer import publish_xaml
 
 
 USAGE = "rst2xaml input_file output_file"
@@ -15,14 +14,7 @@ if len(sys.argv) != 3:
 input_data = open(sys.argv[1]).read()
 #print input_data
 
-
-settings_overrides = {
-    'file_insertion_enabled': False,
-}
-rv = publish_string(source=input_data, writer=XamlWriter(),
-                    settings_overrides=settings_overrides)
-
-output = rv.root.to_string()
+output = publish_xaml(input_data)
 #print output
 
 handle = open(sys.argv[2])
