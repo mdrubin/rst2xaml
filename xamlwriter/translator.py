@@ -13,7 +13,9 @@ class XamlTranslator(NodeVisitor):
 
     def __init__(self, document):
         NodeVisitor.__init__(self, document)
-        self.root = Node('Document')
+        self.root = Node('FlowDocument')
+        self.root.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
         self.curnode = self.root
         self.context = []
         self.compact_simple = None

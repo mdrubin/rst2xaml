@@ -29,9 +29,9 @@ def pygments_directive(name, arguments, options, content, lineno,
         # no lexer found - use the text one instead of an exception
         lexer = TextLexer()
     # take an arbitrary option if more than one is given
-    formatter = options and VARIANTS[options.keys()[0]] or DEFAULT
+    formatter = options and VARIANTS[options.keys()[0]] or XamlFormatter()
     parsed = highlight(u'\n'.join(content), lexer, formatter)
-    return [nodes.raw('', parsed, format='html')]
+    return [nodes.raw('', parsed, format='xaml')]
 
 pygments_directive.arguments = (1, 0, 1)
 pygments_directive.content = 1

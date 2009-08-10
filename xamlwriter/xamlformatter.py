@@ -35,10 +35,26 @@ class XamlFormatter(Formatter):
         Formatter.__init__(self, **options)
         
         self.linenos = 0
-        self.lineseparator = '\n<LineBreak />\n'
+        self.lineseparator = '\n'
         self.hl_lines = set()
+        self.styles = {}
+        
+        for token, style in self.style:
+            format_string = ''
+            # a style item is a tuple in the following form:
+            # colors are readily specified in hex: 'RRGGBB'
+            if style['color']:
+                format_string = ' Foreground="#%s"' % style['color']
+            if style['bold']:
+                format_string += ' FontWeight="Bold"'
+            if style['italic']:
+                format_string += ' FontStyle="Italic"'
+            if style['underline']:
+                # not used ?
+                pass
+            self.styles[token] = format_string
 
-    
+
     def format(self, tokensource, outfile):
         """
         The formatting process uses several nested generators; which of
@@ -55,9 +71,12 @@ class XamlFormatter(Formatter):
         """
         source = self._format_lines(tokensource)
 
+        outfile.write('<Paragraph FontFamily="monospace" xml:space="preserve">')
         for t, piece in source:
             outfile.write(piece)
-
+        
+        outfile.write('</Paragraph>')
+            
 
     def _format_lines(self, tokensource):
         """
@@ -66,43 +85,33 @@ class XamlFormatter(Formatter):
         """
         enc = self.encoding
         lsep = self.lineseparator
-        # for <span style=""> lookup only
-        getcls = self.ttype2class.get
-        c2s = self.class2style
+        
 
         lspan = ''
         line = ''
         for ttype, value in tokensource:
-            cclass = getcls(ttype)
-            while cclass is None:
-                ttype = ttype.parent
-                cclass = getcls(ttype)
-            cspan = cclass and '<Run style="%s">' % c2s[cclass][0] or ''
-                
-
-            if enc:
-                value = value.encode(enc)
-
-            parts = escape_html(value).split('\n')
-
+            cspan = '<Run%s>' % self.styles[ttype]
+            
+            parts = escape_xaml(value).split('\n')
+            
             # for all but the last line
             for part in parts[:-1]:
                 if line:
                     if lspan != cspan:
-                        line += (lspan and '</span>') + cspan + part + \
-                                (cspan and '</span>') + lsep
+                        line += (lspan and '</Run>') + cspan + part + \
+                                (cspan and '</Run>') + lsep
                     else: # both are the same
-                        line += part + (lspan and '</span>') + lsep
+                        line += part + (lspan and '</Run>') + lsep
                     yield 1, line
                     line = ''
                 elif part:
-                    yield 1, cspan + part + (cspan and '</span>') + lsep
+                    yield 1, cspan + part + (cspan and '</Run>') + lsep
                 else:
                     yield 1, lsep
             # for the last line
             if line and parts[-1]:
                 if lspan != cspan:
-                    line += (lspan and '</span>') + cspan + parts[-1]
+                    line += (lspan and '</Run>') + cspan + parts[-1]
                     lspan = cspan
                 else:
                     line += parts[-1]
@@ -112,5 +121,6 @@ class XamlFormatter(Formatter):
             # else we neither have to open a new span nor set lspan
 
         if line:
-            yield 1, line + (lspan and '</span>') + lsep
+            yield 1, line + (lspan and '</Run>') + lsep
+            
 
