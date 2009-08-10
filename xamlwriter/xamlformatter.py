@@ -11,7 +11,7 @@ except NameError:
 
 from pygments.formatter import Formatter
 from pygments.token import Token, Text, STANDARD_TYPES
-from pygments.util import get_bool_opt, get_int_opt, get_list_opt, bytes
+from pygments.util import get_bool_opt, get_int_opt, get_list_opt
 
 
 __all__ = ['XamlFormatter']
@@ -38,16 +38,8 @@ class XamlFormatter(Formatter):
         self.lineseparator = '\n<LineBreak />\n'
         self.hl_lines = set()
 
-
-    def _decodeifneeded(self, value):
-        if isinstance(value, bytes):
-            if self.encoding:
-                return value.decode(self.encoding)
-            return value.decode()
-        return value
-
-
-    def format_unencoded(self, tokensource, outfile):
+    
+    def format(self, tokensource, outfile):
         """
         The formatting process uses several nested generators; which of
         them are used is determined by the user's options.
@@ -62,31 +54,21 @@ class XamlFormatter(Formatter):
         linewise, e.g. line number generators.
         """
         source = self._format_lines(tokensource)
-        if self.hl_lines:
-            source = self._highlight_lines(source)
-        if not self.nowrap:
-            if self.linenos == 2:
-                source = self._wrap_inlinelinenos(source)
-            if self.lineanchors:
-                source = self._wrap_lineanchors(source)
-            source = self.wrap(source, outfile)
-            if self.linenos == 1:
-                source = self._wrap_tablelinenos(source)
-            if self.full:
-                source = self._wrap_full(source, outfile)
 
         for t, piece in source:
             outfile.write(piece)
 
-    
+
     def _format_lines(self, tokensource):
         """
         Just format the tokens, without any wrapping tags.
         Yield individual lines.
         """
-        return
+        enc = self.encoding
         lsep = self.lineseparator
+        # for <span style=""> lookup only
         getcls = self.ttype2class.get
+        c2s = self.class2style
 
         lspan = ''
         line = ''
@@ -95,9 +77,13 @@ class XamlFormatter(Formatter):
             while cclass is None:
                 ttype = ttype.parent
                 cclass = getcls(ttype)
-            cspan = cclass and '<span style="%s">' % c2s[cclass][0] or ''
+            cspan = cclass and '<Run style="%s">' % c2s[cclass][0] or ''
+                
 
-            parts = escape_xaml(value).split('\n')
+            if enc:
+                value = value.encode(enc)
+
+            parts = escape_html(value).split('\n')
 
             # for all but the last line
             for part in parts[:-1]:
@@ -127,3 +113,4 @@ class XamlFormatter(Formatter):
 
         if line:
             yield 1, line + (lspan and '</span>') + lsep
+
