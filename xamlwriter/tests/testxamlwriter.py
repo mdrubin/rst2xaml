@@ -17,17 +17,24 @@ def tree_from_string(input_data):
     return rv.root
 
 
+def get_root():
+    node = Node('FlowDocument')
+    node.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    node.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
+    return node
+
+
 class TestXamlWriter(unittest.TestCase):
     
     def testBasic(self):
         tree = tree_from_string('')
-        self.assertEqual(tree, Node('Document'))
+        self.assertEqual(tree, get_root())
     
         
     def testParagraph(self):
         tree = tree_from_string('Hello')
         
-        node = Node('Document')
+        node = get_root()
         node.children.append(Node('Paragraph'))
         node.children[0].children.append(TextNode('Hello'))
         self.assertEqual(tree, node)
@@ -36,7 +43,7 @@ class TestXamlWriter(unittest.TestCase):
     def testItalics(self):
         tree = tree_from_string('*Hello*')
         
-        node = Node('Document')
+        node = get_root()
         para = Node('Paragraph')
         para.children.append(Node('Italic'))
         para.children[0].children.append(TextNode('Hello'))
@@ -47,7 +54,7 @@ class TestXamlWriter(unittest.TestCase):
     def testBold(self):
         tree = tree_from_string('**Hello**')
         
-        node = Node('Document')
+        node = get_root()
         para = Node('Paragraph')
         para.children.append(Node('Bold'))
         para.children[0].children.append(TextNode('Hello'))
@@ -58,7 +65,7 @@ class TestXamlWriter(unittest.TestCase):
     def testBlockquote(self):
         tree = tree_from_string('Hello\n\n    foo\n')
         
-        node = Node('Document')
+        node = get_root()
         para = Node('Paragraph')
         para.children.append(TextNode('Hello'))
         node.children.append(para)
@@ -74,8 +81,9 @@ class TestXamlWriter(unittest.TestCase):
     def testRawXaml(self):
         data = '.. raw:: xaml\n\n   foo'
         output = publish_xaml(data)
-        expected = '<Document>foo</Document>'
-        self.assertEqual(output, expected)
+        node = get_root()
+        node.children.append(TextNode('foo'))
+        self.assertEqual(output, node.to_string())
 
 
 if __name__ == '__main__':
