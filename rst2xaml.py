@@ -2,6 +2,9 @@
 
 import sys
 
+# This installs the pygments directive
+import xamlwriter.register_directive
+
 from xamlwriter.writer import publish_xaml
 
 
