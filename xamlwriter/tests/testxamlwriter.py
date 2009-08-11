@@ -71,10 +71,13 @@ class TestXamlWriter(unittest.TestCase):
         para.children.append(TextNode('Hello'))
         node.children.append(para)
         
+        section = Node('Section')
+        section.attributes['Margin'] = "16,0,0,0"
         quote = Node('Paragraph')
-        quote.attributes['TextIndent'] = "25"
         quote.children.append(TextNode('foo'))
-        node.children.append(quote)
+        section.children.append(quote)
+        
+        node.children.append(section)
         
         self.assertEqual(tree, node)
 
