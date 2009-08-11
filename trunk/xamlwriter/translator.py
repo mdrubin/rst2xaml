@@ -40,7 +40,8 @@ class XamlTranslator(NodeVisitor):
         self.curnode = self.curnode.parent
 
     def add_text(self, text):
-        self.curnode.children.append(TextNode(text))
+        if text:
+            self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
         self.begin_node(None, name, **attributes)
@@ -56,8 +57,12 @@ class XamlTranslator(NodeVisitor):
 
     trivial_nodes = {
         'strong': ('Bold', {}),
-        'block_quote': ('Paragraph', {'TextIndent':"25"}),
-        'emphasis': ('Italic', {})
+        'block_quote': ('Paragraph', {'TextIndent': "25"}),
+        'emphasis': ('Italic', {}),
+        'literal_block': ('Paragraph', {'FontFamily': 'monospace', 
+                                  'xml:space': 'preserve'}),
+        'superscript': ('Run', {'Typography.Variants': 'Superscript'}),
+        'line_block': ('Paragraph', {}), 
     }
 
     def dispatch_visit(self, node):
@@ -100,15 +105,13 @@ class XamlTranslator(NodeVisitor):
     def should_be_compact_paragraph(self, _):
         # For elements inside a list element (etc) we always want a paragraph
         return False
+    
+    def visit_line(self, node):
+        pass
+    
+    def depart_line(self, node):
+        self.add_node('LineBreak')
 
-"""
-    <Paragraph>
-      <Run Typography.Variants="Superscript">This text is Superscripted.</Run> This text isn't.
-    </Paragraph>
-    <Paragraph>
-      <Run Typography.Variants="Subscript">This text is Subscripted.</Run> This text isn't.
-    </Paragraph>
-    <Paragraph>
-      If a font does not support a particular form (such as Superscript) a default font form will be displayed.
-    </Paragraph>
-"""
+        
+        
+        

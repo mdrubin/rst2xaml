@@ -1,9 +1,9 @@
 import unittest
+from textwrap import dedent
+from docutils.core import publish_string
 
 from xamlwriter.writer import XamlWriter, publish_xaml
 from xamlwriter.node import Node, TextNode
-
-from docutils.core import publish_string
 
 
 settings_overrides = {
@@ -11,6 +11,7 @@ settings_overrides = {
 }
 
 def tree_from_string(input_data):
+    input_data = dedent(input_data)
     rv = publish_string(source=input_data, writer=XamlWriter(),
                         settings_overrides=settings_overrides)
 
@@ -84,7 +85,47 @@ class TestXamlWriter(unittest.TestCase):
         node = get_root()
         node.children.append(TextNode('foo'))
         self.assertEqual(output, node.to_string())
-
+        
+    
+    def testLiteralBlock(self):
+        node = get_root()
+        literal = Node('Paragraph')
+        literal.attributes['FontFamily'] = 'monospace'
+        literal.attributes['xml:space'] = 'preserve'
+        node.children.append(literal)
+        literal.children.append(TextNode('foo'))
+        
+        self.assertEqual(tree_from_string('::\n\n    foo'), node)
+    
+       
+    def testSuperscript(self):
+        node = get_root()
+        para = Node('Paragraph')
+        superscript = Node('Run')
+        superscript.attributes['Typography.Variants'] = 'Superscript'
+        para.children.append(superscript)
+        node.children.append(para)
+        superscript.children.append(TextNode('foo'))
+        
+        self.assertEqual(tree_from_string(':sup:`foo`'), node)
+    
+    
+    def testLineBlock(self):
+        node = get_root()
+        para = Node('Paragraph')
+        para.children.append(TextNode('foo'))
+        para.children.append(Node('LineBreak'))
+        para.children.append(TextNode('bar'))
+        para.children.append(Node('LineBreak'))
+        
+        node.children.append(para)
+        
+        actual = tree_from_string("""\
+            | foo
+            | bar""")
+        
+        self.assertEqual(actual, node)
+        
 
 if __name__ == '__main__':
     unittest.main()
