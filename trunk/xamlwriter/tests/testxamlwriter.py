@@ -93,7 +93,7 @@ class TestXamlWriter(unittest.TestCase):
     def testLiteralBlock(self):
         node = get_root()
         literal = Node('Paragraph')
-        literal.attributes['FontFamily'] = 'monospace'
+        literal.attributes['FontFamily'] = 'Global Monospace'
         literal.attributes['xml:space'] = 'preserve'
         node.children.append(literal)
         literal.children.append(TextNode('foo'))
@@ -183,7 +183,7 @@ class TestXamlWriter(unittest.TestCase):
         node = get_root()
         para = Node('Paragraph')
         literal = Node('Run')
-        literal.attributes['FontFamily'] = 'monospace'
+        literal.attributes['FontFamily'] = 'Global Monospace'
         literal.attributes['xml:space'] = 'preserve'
         para.children.append(literal)
         literal.children.append(TextNode('foo  bar'))
