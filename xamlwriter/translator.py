@@ -16,11 +16,14 @@ class XamlTranslator(NodeVisitor):
         self.flowdocument = flowdocument
         if flowdocument:
             self.root = Node('FlowDocument')
+            self.curnode = self.root
         else:
-            self.root = Node('TextBlock')
+            self.root = Node('Canvas')
+            node = Node('TextBlock')
+            self.curnode = node
+            self.root.attributes['x:Class'] = 'System.Windows.Controls.Canvas'
         self.root.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
-        self.curnode = self.root
+        self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"        
         self.context = []
         self.initial_header_level = 2
         self.section_level = 0
