@@ -57,7 +57,7 @@ class XamlTranslator(NodeVisitor):
 
     trivial_nodes = {
         'strong': ('Bold', {}),
-        'block_quote': ('Paragraph', {'TextIndent': "25"}),
+        'block_quote': ('Section', {'Margin': "16,0,0,0"}),
         'emphasis': ('Italic', {}),
         'literal_block': ('Paragraph', {'FontFamily': 'monospace', 
                                   'xml:space': 'preserve'}),
@@ -95,7 +95,7 @@ class XamlTranslator(NodeVisitor):
         raise SkipNode
 
     def visit_paragraph(self, node):
-        if self.should_be_compact_paragraph(node) or self.curnode.name == 'Paragraph':
+        if self.should_be_compact_paragraph(node):
             self.context.append(False)
         else:
             self.begin_node(node, 'Paragraph')
