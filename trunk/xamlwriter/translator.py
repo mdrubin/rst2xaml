@@ -21,6 +21,7 @@ class XamlTranslator(NodeVisitor):
             self.root = Node('Canvas')
             node = Node('TextBlock')
             self.curnode = node
+            self.root.children.append(node)
             self.root.attributes['x:Class'] = 'System.Windows.Controls.Canvas'
         self.root.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"        
