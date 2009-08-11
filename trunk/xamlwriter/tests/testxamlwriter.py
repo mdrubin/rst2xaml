@@ -125,6 +125,31 @@ class TestXamlWriter(unittest.TestCase):
             | bar""")
         
         self.assertEqual(actual, node)
+    
+    
+    def testBulletList(self):
+        node = get_root()
+        def get_item(text):
+            node = Node('ListItem')
+            para = Node('Paragraph')
+            para.children.append(TextNode(text))
+            node.children.append(para)
+            return node
+        
+        list_node = Node('List')
+        list_node.children.append(get_item('first'))
+        list_node.children.append(get_item('second'))
+        list_node.children.append(get_item('third'))
+        
+        node.children.append(list_node)
+        
+        actual = tree_from_string("""\
+            * first
+            * second
+            * third""")
+        
+        self.assertEqual(actual, node)
+        
         
 
 if __name__ == '__main__':

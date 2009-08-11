@@ -63,6 +63,8 @@ class XamlTranslator(NodeVisitor):
                                   'xml:space': 'preserve'}),
         'superscript': ('Run', {'Typography.Variants': 'Superscript'}),
         'line_block': ('Paragraph', {}), 
+        'bullet_list': ('List', {}),
+        'list_item': ('ListItem', {}),
     }
 
     def dispatch_visit(self, node):
@@ -112,6 +114,4 @@ class XamlTranslator(NodeVisitor):
     def depart_line(self, node):
         self.add_node('LineBreak')
 
-        
-        
         
