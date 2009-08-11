@@ -61,14 +61,14 @@ class XamlTranslator(NodeVisitor):
         'strong': ('Bold', {}),
         'block_quote': ('Section', {'Margin': "16,0,0,0"}),
         'emphasis': ('Italic', {}),
-        'literal_block': ('Paragraph', {'FontFamily': 'monospace', 
+        'literal_block': ('Paragraph', {'FontFamily': 'Global Monospace', 
                                   'xml:space': 'preserve'}),
         'superscript': ('Run', {'Typography.Variants': 'Superscript'}),
         'line_block': ('Paragraph', {}), 
         'bullet_list': ('List', {}),
         'list_item': ('ListItem', {}),
         'enumerated_list': ('List', {'MarkerStyle': 'Decimal'}),
-        'literal': ('Run', {'FontFamily': 'monospace', 'xml:space': 'preserve'})
+        'literal': ('Run', {'FontFamily': 'Courier New', 'xml:space': 'preserve'})
     }
 
     def dispatch_visit(self, node):
