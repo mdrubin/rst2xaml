@@ -14,7 +14,7 @@ def make_source(string):
 def make_doc(string):
     return ('<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
             'xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">'
-            '<Paragraph FontFamily="Global Monospace" xml:space="preserve">%s'
+            '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">%s'
             '</Paragraph></FlowDocument>' % string)
 
 
