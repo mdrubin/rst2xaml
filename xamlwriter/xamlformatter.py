@@ -103,12 +103,13 @@ class XamlFormatter(Formatter):
         for ttype, value in tokensource:
             cspan = '<Run%s>' % self.styles[ttype]
             
+            
+            if not self.flowdocument:
+                value = value.replace(' ', '&#0160;')
             parts = escape_xaml(value).split('\n')
             
             # for all but the last line
             for part in parts[:-1]:
-                if not self.flowdocument:
-                    part = part.replace(' ', u'\u00A0')
                 if line:
                     if lspan != cspan:
                         line += (lspan and '</Run>') + cspan + part + \
