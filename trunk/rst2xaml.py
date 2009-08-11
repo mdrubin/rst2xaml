@@ -20,6 +20,6 @@ input_data = open(sys.argv[1]).read()
 output = publish_xaml(input_data)
 #print output
 
-handle = open(sys.argv[2])
-handle.write(rv.root.to_string())
+handle = open(sys.argv[2], 'w')
+handle.write(output)
 handle.close()
