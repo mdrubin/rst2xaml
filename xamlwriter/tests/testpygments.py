@@ -9,7 +9,7 @@ import xamlwriter.register_directive
 
 
 def make_source(string):
-    return '.. sourcecode:: python\n\n    ' +  '\n    '.join(string.splitlines())
+    return '.. code-block:: python\n\n    ' +  '\n    '.join(string.splitlines())
 
 def make_doc(string):
     return ('<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '

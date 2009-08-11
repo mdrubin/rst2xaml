@@ -37,4 +37,4 @@ pygments_directive.arguments = (1, 0, 1)
 pygments_directive.content = 1
 pygments_directive.options = dict([(key, directives.flag) for key in VARIANTS])
 
-directives.register_directive('sourcecode', pygments_directive)
+directives.register_directive('code-block', pygments_directive)
