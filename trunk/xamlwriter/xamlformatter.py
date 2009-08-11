@@ -108,7 +108,7 @@ class XamlFormatter(Formatter):
             # for all but the last line
             for part in parts[:-1]:
                 if not self.flowdocument:
-                    part = part.replace(' ', '\u00a0')
+                    part = part.replace(' ', u'\u00A0')
                 if line:
                     if lspan != cspan:
                         line += (lspan and '</Run>') + cspan + part + \
