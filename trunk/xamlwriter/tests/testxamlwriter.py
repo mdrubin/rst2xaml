@@ -149,6 +149,31 @@ class TestXamlWriter(unittest.TestCase):
             * third""")
         
         self.assertEqual(actual, node)
+    
+    
+    def testEnumeratedList(self):
+        node = get_root()
+        def get_item(text):
+            node = Node('ListItem')
+            para = Node('Paragraph')
+            para.children.append(TextNode(text))
+            node.children.append(para)
+            return node
+        
+        list_node = Node('List')
+        list_node.attributes['MarkerStyle'] = 'Decimal'
+        list_node.children.append(get_item('first'))
+        list_node.children.append(get_item('second'))
+        list_node.children.append(get_item('third'))
+        
+        node.children.append(list_node)
+        
+        actual = tree_from_string("""\
+            1. first
+            2. second
+            3. third""")
+        
+        self.assertEqual(actual, node)
         
         
 

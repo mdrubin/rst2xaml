@@ -65,6 +65,7 @@ class XamlTranslator(NodeVisitor):
         'line_block': ('Paragraph', {}), 
         'bullet_list': ('List', {}),
         'list_item': ('ListItem', {}),
+        'enumerated_list': ('List', {'MarkerStyle': 'Decimal'}),
     }
 
     def dispatch_visit(self, node):
