@@ -11,9 +11,13 @@ class XamlTranslator(NodeVisitor):
 
     words_and_spaces = re.compile(r'\S+| +|\n')
 
-    def __init__(self, document):
+    def __init__(self, document, flowdocument=True):
         NodeVisitor.__init__(self, document)
-        self.root = Node('FlowDocument')
+        self.flowdocument = flowdocument
+        if flowdocument:
+            self.root = Node('FlowDocument')
+        else:
+            self.root = Node('TextBlock')
         self.root.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
         self.curnode = self.root
@@ -98,5 +102,17 @@ class XamlTranslator(NodeVisitor):
     
     def depart_line(self, node):
         self.add_node('LineBreak')
+    
+    def visit_paragraph(self, node):
+        if self.flowdocument:
+            self.begin_node('Paragraph')
+        else:
+            self.begin_node('Run')
+        
+    def depart_paragraph(self, node):
+        self.end_node()
+        if not self.flowdocument:
+            self.add_node('LineBreak')
+            self.add_node('LineBreak')
 
         

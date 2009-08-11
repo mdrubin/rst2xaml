@@ -31,11 +31,15 @@ class XamlFormatter(Formatter):
     aliases = ['xaml']
     filenames = ['*.xaml']
 
-    def __init__(self, **options):
+    def __init__(self, flowdocument=True, **options):
         Formatter.__init__(self, **options)
+        self.flowdocument = flowdocument
         
         self.linenos = 0
-        self.lineseparator = '\n'
+        if flowdocument:
+            self.lineseparator = '\n'
+        else:
+            self.lineseparator = '<LineBreak />'
         self.hl_lines = set()
         self.styles = {}
         
@@ -71,11 +75,18 @@ class XamlFormatter(Formatter):
         """
         source = self._format_lines(tokensource)
 
-        outfile.write('<Paragraph FontFamily="monospace" xml:space="preserve">')
+        if self.flowdocument:
+            start = '<Paragraph FontFamily="monospace" xml:space="preserve">'
+            end = '</Paragraph>'
+        else:
+            start = '<Run FontFamily="monospace">'
+            end = '</Run>'
+            
+        outfile.write(start)
         for t, piece in source:
             outfile.write(piece)
         
-        outfile.write('</Paragraph>')
+        outfile.write(end)
             
 
     def _format_lines(self, tokensource):
@@ -96,6 +107,8 @@ class XamlFormatter(Formatter):
             
             # for all but the last line
             for part in parts[:-1]:
+                if not self.flowdocument:
+                    part = part.replace(' ', '\u00a0')
                 if line:
                     if lspan != cspan:
                         line += (lspan and '</Run>') + cspan + part + \
