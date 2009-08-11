@@ -57,7 +57,7 @@ class XamlFormatter(Formatter):
                 # not used ?
                 pass
             if not self.flowdocument:
-                format_string += ' FontFamily="Global Monospace"'
+                format_string += ' FontFamily="Consolas, Global Monospace"'
             self.styles[token] = format_string
 
 
@@ -79,7 +79,7 @@ class XamlFormatter(Formatter):
 
         start = end = ''
         if self.flowdocument:
-            start = '<Paragraph FontFamily="Global Monospace" xml:space="preserve">'
+            start = '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">'
             end = '</Paragraph>'
             
         outfile.write(start)
