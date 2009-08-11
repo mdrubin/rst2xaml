@@ -20,6 +20,7 @@ class XamlTranslator(NodeVisitor):
         else:
             self.root = Node('Canvas')
             node = Node('TextBlock')
+            node.attributes['FontSize'] = '14'
             self.curnode = node
             self.root.children.append(node)
             self.root.attributes['x:Class'] = 'System.Windows.Controls.Canvas'
@@ -46,6 +47,8 @@ class XamlTranslator(NodeVisitor):
 
     def add_text(self, text):
         if text:
+            if not self.flowdocument:
+                text = text.replace(' ', '&#160;')
             self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
