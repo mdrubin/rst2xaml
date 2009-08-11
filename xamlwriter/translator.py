@@ -18,9 +18,6 @@ class XamlTranslator(NodeVisitor):
         self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
         self.curnode = self.root
         self.context = []
-        self.compact_simple = None
-        self.compact_field_list = None
-        self.compact_p = 1
         self.initial_header_level = 2
         self.section_level = 0
 
@@ -56,6 +53,7 @@ class XamlTranslator(NodeVisitor):
         return
 
     trivial_nodes = {
+        'paragraph': ('Paragraph', {}),
         'strong': ('Bold', {}),
         'block_quote': ('Section', {'Margin': "16,0,0,0"}),
         'emphasis': ('Italic', {}),
@@ -94,21 +92,6 @@ class XamlTranslator(NodeVisitor):
         node.parent = self.curnode
         self.curnode.children.append(node)
         raise SkipNode
-
-    def visit_paragraph(self, node):
-        if self.should_be_compact_paragraph(node):
-            self.context.append(False)
-        else:
-            self.begin_node(node, 'Paragraph')
-            self.context.append(True)
-
-    def depart_paragraph(self, node):
-        if self.context.pop():
-            self.end_node()
-
-    def should_be_compact_paragraph(self, _):
-        # For elements inside a list element (etc) we always want a paragraph
-        return False
     
     def visit_line(self, node):
         pass
