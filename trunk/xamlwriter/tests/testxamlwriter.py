@@ -20,6 +20,7 @@ def tree_from_string(input_data):
 
 def get_root():
     node = Node('FlowDocument')
+    node.attributes['FontSize'] = '15'
     node.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     node.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
     return node
@@ -190,7 +191,44 @@ class TestXamlWriter(unittest.TestCase):
         node.children.append(para)
         
         self.assertEqual(tree_from_string('``foo  bar``'), node)
-        
 
+    def testTitleSubtitleSection(self):
+        def get_title(fontsize, text, **attributes):
+            node = Node('Paragraph')
+            node.children.append(TextNode(text))
+            node.attributes.update(attributes.items())
+            node.attributes['FontSize'] = fontsize
+            return node
+        
+        node = get_root()
+        node.children.append(get_title(20, 'Title', FontWeight='Bold'))
+        node.children.append(get_title(19, 'Subtitle', FontStyle='Italic'))
+        node.children.append(get_title(19, 'Heading 1'))
+        node.children.append(get_title(18, 'Heading 2'))
+        node.children.append(get_title(17, 'Heading 3'))
+        node.children.append(get_title(16, 'Heading 4'))
+        
+        source = """\
+        =======
+         Title
+        =======
+        ----------
+         Subtitle
+        ----------
+        
+        Heading 1
+        =========
+        
+        Heading 2
+        ---------
+        
+        Heading 3
+        ~~~~~~~~~
+        
+        Heading 4
+        #########
+        """
+        self.assertEqual(tree_from_string(source), node)
+        
 if __name__ == '__main__':
     unittest.main()

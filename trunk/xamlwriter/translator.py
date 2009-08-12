@@ -16,6 +16,7 @@ class XamlTranslator(NodeVisitor):
         self.flowdocument = flowdocument
         if flowdocument:
             self.root = Node('FlowDocument')
+            self.root.attributes['FontSize'] = '15'
             self.curnode = self.root
         else:
             self.root = Node('Canvas')
@@ -64,7 +65,6 @@ class XamlTranslator(NodeVisitor):
         return
 
     trivial_nodes = {
-        'paragraph': ('Paragraph', {}),
         'strong': ('Bold', {}),
         'block_quote': ('Section', {'Margin': "16,0,0,0"}),
         'emphasis': ('Italic', {}),
@@ -112,9 +112,9 @@ class XamlTranslator(NodeVisitor):
     
     def visit_paragraph(self, node):
         if self.flowdocument:
-            self.begin_node('Paragraph')
+            self.begin_node(node, 'Paragraph')
         else:
-            self.begin_node('Run')
+            self.begin_node(node, 'Run')
         
     def depart_paragraph(self, node):
         self.end_node()
@@ -122,4 +122,52 @@ class XamlTranslator(NodeVisitor):
             self.add_node('LineBreak')
             self.add_node('LineBreak')
 
+    def visit_title(self, node):
+        begun = False
+        if isinstance(node.parent, nodes.document):
+            begun = True
+            self.begin_node(node, 'Paragraph', FontSize=20, FontWeight='Bold')
+        elif isinstance(node.parent, nodes.section):
+            atts = {}
+            if (len(node.parent) >= 2 and
+                isinstance(node.parent[1], nodes.subtitle)):
+                atts['FontStyle'] = 'Italic'
+            atts['FontSize'] = 20 - self.section_level
+            self.begin_node(node, 'Paragraph', **atts)
+            begun = True
+            # We don't do back-reference link for title
+        else:
+            # also used for sidebar, topic, 
+            # Admonition, table (caption)
+            pass
+        self.context.append(begun)
+
+    def depart_title(self, node):
+        if self.context.pop():
+            self.end_node()
+    
+    def visit_section(self, node):
+        self.section_level += 1
+
+    def depart_section(self, node):
+        self.section_level -= 1
         
+    def visit_subtitle(self, node):
+        begun = False
+        if isinstance(node.parent, nodes.document):
+            self.begin_node(node, 'Paragraph', FontSize='19',
+                            FontStyle='Italic')
+            begun = True
+        else:
+            # Also used for sidebar and section
+            pass
+        self.context.append(begun)
+
+    def depart_subtitle(self, node):
+        if self.context.pop():
+            self.end_node()
+        
+"""
+ 
+Can use Floater for sidebar.
+"""
