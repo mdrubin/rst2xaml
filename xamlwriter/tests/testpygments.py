@@ -12,7 +12,7 @@ def make_source(string):
     return '.. code-block:: python\n\n    ' +  '\n    '.join(string.splitlines())
 
 def make_doc(string):
-    return ('<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
+    return ('<FlowDocument FontSize="15" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
             'xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">'
             '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">%s'
             '</Paragraph></FlowDocument>' % string)
