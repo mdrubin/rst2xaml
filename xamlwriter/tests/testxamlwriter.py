@@ -229,6 +229,12 @@ class TestXamlWriter(unittest.TestCase):
         #########
         """
         self.assertEqual(tree_from_string(source), node)
-        
+
+
+    def testSystemMessage(self):
+        self.fail()
+
+
+
 if __name__ == '__main__':
     unittest.main()
