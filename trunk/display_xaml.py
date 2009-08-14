@@ -15,19 +15,24 @@ if len(sys.argv) == 1:
 	dialog = OpenFileDialog()
 	dialog.ShowDialog()
 	
+	filename = dialog.FileName
+	if filename is None:
+		sys.exit()
 	stream = dialog.OpenFile()
 elif len(sys.argv) > 2:
 	print 'display_xaml [xaml_file]'
 	sys.exit(1)
 else:
 	from System.IO import File
-	stream = File.OpenRead(sys.argv[1])
+	filename = sys.argv[1]
+	stream = File.OpenRead(filename)
 
 reader = FlowDocumentReader()
 flowDocument = XamlReader.Load(stream)
 stream.Close()
 reader.Document = flowDocument
 w = Window()
+w.Title = "Displaying %r" % filename
 w.Content = reader
 Application().Run(w)
 
