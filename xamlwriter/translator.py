@@ -6,6 +6,7 @@ from docutils import nodes
 from docutils.nodes import NodeVisitor, SkipNode
 
 FONT_SIZE = '15'
+MARGIN = "16,0,0,0"
 
 class XamlTranslator(NodeVisitor):
 
@@ -45,7 +46,7 @@ class XamlTranslator(NodeVisitor):
     def add_text(self, text):
         if text:
             if not self.flowdocument:
-                text = text.replace('  ', '&#160; ').replace('\t', '&#160;&#160;&#160;&#160;')
+                text = text.replace('\t', '&#160;&#160;&#160;&#160;')
             self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
@@ -64,8 +65,7 @@ class XamlTranslator(NodeVisitor):
         'paragraph': ('Paragraph', {}),
         'emphasis': ('Italic', {}),
         'strong': ('Bold', {}),
-        'block_quote': ('Section', {'Margin': "16,0,0,0"}),
-        'emphasis': ('Italic', {}),
+        'block_quote': ('Section', {'Margin': MARGIN}),
         'literal_block': ('Paragraph', {'FontFamily': 'Consolas, Global Monospace', 
                                         'xml:space': 'preserve'}),
         'superscript': ('Run', {'Typography.Variants': 'Superscript'}),
@@ -83,7 +83,7 @@ class XamlTranslator(NodeVisitor):
                                     'TextWrapping': "Wrap"}), 
         'emphasis': ('Run', {'FontStyle': 'Italic'}),
         'strong': ('Run', {'FontWeight': 'Bold'}),
-        'block_quote': ('StackPanel', {'Margin': "16,0,0,0"}),
+        'block_quote': ('StackPanel', {'Margin': MARGIN}),
     }
 
     def dispatch_visit(self, node):

@@ -3,7 +3,7 @@ from textwrap import dedent
 from docutils.core import publish_string
 
 from xamlwriter.node import Node, TextNode
-from xamlwriter.translator import FONT_SIZE
+from xamlwriter.translator import FONT_SIZE, MARGIN
 from xamlwriter.writer import XamlWriter, publish_xaml
 
 
@@ -267,8 +267,9 @@ class TestSilverlightXaml(unittest.TestCase):
 
         
     def testWhitespace(self):
-        # need to test that spaces become &#160;
+        # need to test that tabs become 4x '&#160;'
         self.fail()
+
         
     def testParagraph(self):
         tree = tree_from_string_sl('Hello')
@@ -317,7 +318,7 @@ class TestSilverlightXaml(unittest.TestCase):
         node.children.append(para)
         
         block = Node('StackPanel')
-        block.attributes['Margin'] = "16,0,0,0"
+        block.attributes['Margin'] = MARGIN
         para2 = get_sl_paragraph()
         para2.children.append(TextNode('foo'))
         block.children.append(para2)
@@ -325,8 +326,7 @@ class TestSilverlightXaml(unittest.TestCase):
         node.children.append(block)
         
         self.assertEqual(tree, node)
-    
-
+        
 
 if __name__ == '__main__':
     unittest.main()
