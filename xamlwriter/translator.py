@@ -61,6 +61,8 @@ class XamlTranslator(NodeVisitor):
         return
 
     trivial_nodes = {
+        'paragraph': ('Paragraph', {}),
+        'emphasis': ('Italic', {}),
         'strong': ('Bold', {}),
         'block_quote': ('Section', {'Margin': "16,0,0,0"}),
         'emphasis': ('Italic', {}),
@@ -73,6 +75,11 @@ class XamlTranslator(NodeVisitor):
         'enumerated_list': ('List', {'MarkerStyle': 'Decimal'}),
         'literal': ('Run', {'FontFamily': 'Consolas, Global Monospace', 'xml:space': 'preserve'})
     }
+    
+    trivial_nodes_silverlight = {
+        'paragraph': ('TextBlock', {'FontSize': FONT_SIZE}), 
+        'emphasis': ('Run', {'FontStyle': 'Italic'}),
+    }
 
     def dispatch_visit(self, node):
         # don't call visitor methods for trivial nodes
@@ -80,7 +87,12 @@ class XamlTranslator(NodeVisitor):
         if node_name == 'Text':
             self.add_text(node.astext())
             raise SkipNode
-        tagname, atts = self.trivial_nodes.get(node_name, (None, None))
+        if self.flowdocument:
+            trivial_nodes_dict = self.trivial_nodes
+        else:
+            trivial_nodes_dict = self.trivial_nodes_silverlight
+            
+        tagname, atts = trivial_nodes_dict.get(node_name, (None, None))
         if tagname:
             self.begin_node(node, tagname, **atts)
         else:
@@ -106,16 +118,6 @@ class XamlTranslator(NodeVisitor):
     def depart_line(self, node):
         self.add_node('LineBreak')
     
-    def visit_paragraph(self, node):
-        if self.flowdocument:
-            self.begin_node(node, 'Paragraph')
-        else:
-            self.begin_node(node, 'TextBlock')
-            self.curnode.attributes['FontSize'] = FONT_SIZE
-        
-    def depart_paragraph(self, node):
-        self.end_node()
-
     def visit_title(self, node):
         begun = False
         if isinstance(node.parent, nodes.document):
