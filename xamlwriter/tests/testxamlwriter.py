@@ -47,7 +47,7 @@ def get_root_sl():
 def get_sl_paragraph():
     para = Node('TextBlock')
     para.attributes['FontSize'] = FONT_SIZE
-    para.attributes['Margin'] = "0,0,10,0"
+    para.attributes['Margin'] = "0,10,0,0"
     return para
 
 
