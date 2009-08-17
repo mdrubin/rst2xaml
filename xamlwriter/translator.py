@@ -5,7 +5,7 @@ from xamlwriter.node import ErrorNode, Node, TextNode
 from docutils import nodes
 from docutils.nodes import NodeVisitor, SkipNode
 
-
+FONT_SIZE = '15'
 
 class XamlTranslator(NodeVisitor):
 
@@ -16,17 +16,13 @@ class XamlTranslator(NodeVisitor):
         self.flowdocument = flowdocument
         if flowdocument:
             self.root = Node('FlowDocument')
-            self.root.attributes['FontSize'] = '15'
-            self.curnode = self.root
+            self.root.attributes['FontSize'] = FONT_SIZE
         else:
-            self.root = Node('Canvas')
-            node = Node('TextBlock')
-            node.attributes['FontSize'] = '14'
-            self.curnode = node
-            self.root.children.append(node)
-            self.root.attributes['x:Class'] = 'System.Windows.Controls.Canvas'
+            self.root = Node('StackPanel')
+            self.root.attributes['x:Class'] = 'System.Windows.Controls.StackPanel'
         self.root.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"        
+        self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
+        self.curnode = self.root
         self.context = []
         self.initial_header_level = 2
         self.section_level = 0
@@ -114,13 +110,11 @@ class XamlTranslator(NodeVisitor):
         if self.flowdocument:
             self.begin_node(node, 'Paragraph')
         else:
-            self.begin_node(node, 'Run')
+            self.begin_node(node, 'TextBlock')
+            self.curnode.attributes['FontSize'] = FONT_SIZE
         
     def depart_paragraph(self, node):
         self.end_node()
-        if not self.flowdocument:
-            self.add_node('LineBreak')
-            self.add_node('LineBreak')
 
     def visit_title(self, node):
         begun = False
@@ -167,22 +161,6 @@ class XamlTranslator(NodeVisitor):
         if self.context.pop():
             self.end_node()
 
-    def visit_system_message(self, node):
-        line = ''
-        if node.hasattr('line'):
-            line = ', line %s' % node['line']
-        
-        #  The text should be handled as a paragraph but we handle it here using MarkupErrorElement
-        text = node[0][0].astext()
-        message = 'System Message: %s/%s %s, %s\n' % (node['type'], node['level'], line, text)
-        
-        zeml_node = MarkupErrorElement(message)
-        zeml_node.parent = self.curnode
-        self.curnode.children.append(zeml_node)
-        self.curnode = zeml_node
-        
-        self.end_node()
-        raise nodes.SkipNode
 """
  
 Can use Floater for sidebar.
