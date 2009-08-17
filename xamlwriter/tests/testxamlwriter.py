@@ -287,6 +287,39 @@ class TestSilverlightXaml(unittest.TestCase):
         node.children.append(para)
         self.assertEqual(tree, node)
     
+        
+    def testBold(self):
+        tree = tree_from_string_sl('**Hello**')
+        
+        node = get_root_sl()
+        para = get_sl_paragraph()
+        italic = Node('Run')
+        italic.attributes['FontWeight'] = 'Bold'
+        para.children.append(italic)
+        para.children[0].children.append(TextNode('Hello'))
+        
+        node.children.append(para)
+        self.assertEqual(tree, node)
+
+
+    def testBlockquote(self):
+        tree = tree_from_string_sl('Hello\n\n    foo\n')
+        
+        node = get_root_sl()
+        para = get_sl_paragraph()
+        para.children.append(TextNode('Hello'))
+        node.children.append(para)
+        
+        block = Node('StackPanel')
+        block.attributes['Margin'] = "16,0,0,0"
+        para2 = get_sl_paragraph()
+        para2.children.append(TextNode('foo'))
+        block.children.append(para2)
+        
+        node.children.append(block)
+        
+        self.assertEqual(tree, node)
+    
 
 
 if __name__ == '__main__':
