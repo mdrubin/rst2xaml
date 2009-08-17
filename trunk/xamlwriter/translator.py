@@ -79,6 +79,8 @@ class XamlTranslator(NodeVisitor):
     trivial_nodes_silverlight = {
         'paragraph': ('TextBlock', {'FontSize': FONT_SIZE}), 
         'emphasis': ('Run', {'FontStyle': 'Italic'}),
+        'strong': ('Run', {'FontWeight': 'Bold'}),
+        'block_quote': ('StackPanel', {'Margin': "16,0,0,0"}),
     }
 
     def dispatch_visit(self, node):
@@ -162,6 +164,7 @@ class XamlTranslator(NodeVisitor):
     def depart_subtitle(self, node):
         if self.context.pop():
             self.end_node()
+
 
 """
  
