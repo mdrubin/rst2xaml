@@ -48,6 +48,7 @@ def get_sl_paragraph():
     para = Node('TextBlock')
     para.attributes['FontSize'] = FONT_SIZE
     para.attributes['Margin'] = "0,10,0,0"
+    para.attributes['TextWrapping'] = "Wrap"
     return para
 
 
