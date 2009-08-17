@@ -47,6 +47,7 @@ def get_root_sl():
 def get_sl_paragraph():
     para = Node('TextBlock')
     para.attributes['FontSize'] = FONT_SIZE
+    para.attributes['Margin'] = "0,0,10,0"
     return para
 
 
@@ -262,7 +263,11 @@ class TestSilverlightXaml(unittest.TestCase):
     def testBasic(self):
         tree = tree_from_string_sl('')
         self.assertEqual(tree, get_root_sl())
-    
+
+        
+    def testWhitespace(self):
+        # need to test that spaces become &#160;
+        self.fail()
         
     def testParagraph(self):
         tree = tree_from_string_sl('Hello')
