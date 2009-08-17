@@ -281,7 +281,7 @@ class TestSilverlightXaml(unittest.TestCase):
         para = get_sl_paragraph()
         italic = Node('Run')
         italic.attributes['FontStyle'] = 'Italic'
-        para.children.append()
+        para.children.append(italic)
         para.children[0].children.append(TextNode('Hello'))
         
         node.children.append(para)
