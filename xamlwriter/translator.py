@@ -77,7 +77,7 @@ class XamlTranslator(NodeVisitor):
     }
     
     trivial_nodes_silverlight = {
-        'paragraph': ('TextBlock', {'FontSize': FONT_SIZE}), 
+        'paragraph': ('TextBlock', {'FontSize': FONT_SIZE, 'Margin': "0,0,10,0"}), 
         'emphasis': ('Run', {'FontStyle': 'Italic'}),
         'strong': ('Run', {'FontWeight': 'Bold'}),
         'block_quote': ('StackPanel', {'Margin': "16,0,0,0"}),
