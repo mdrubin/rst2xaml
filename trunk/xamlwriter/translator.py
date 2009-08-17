@@ -45,7 +45,7 @@ class XamlTranslator(NodeVisitor):
     def add_text(self, text):
         if text:
             if not self.flowdocument:
-                text = text.replace(' ', '&#160;')
+                text = text.replace('  ', '&#160; ').replace('\t', '&#160;&#160;&#160;&#160;')
             self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
@@ -67,13 +67,14 @@ class XamlTranslator(NodeVisitor):
         'block_quote': ('Section', {'Margin': "16,0,0,0"}),
         'emphasis': ('Italic', {}),
         'literal_block': ('Paragraph', {'FontFamily': 'Consolas, Global Monospace', 
-                                  'xml:space': 'preserve'}),
+                                        'xml:space': 'preserve'}),
         'superscript': ('Run', {'Typography.Variants': 'Superscript'}),
         'line_block': ('Paragraph', {}), 
         'bullet_list': ('List', {}),
         'list_item': ('ListItem', {}),
         'enumerated_list': ('List', {'MarkerStyle': 'Decimal'}),
-        'literal': ('Run', {'FontFamily': 'Consolas, Global Monospace', 'xml:space': 'preserve'})
+        'literal': ('Run', {'FontFamily': 'Consolas, Global Monospace', 
+                            'xml:space': 'preserve'})
     }
     
     trivial_nodes_silverlight = {
