@@ -2,8 +2,9 @@ import unittest
 from textwrap import dedent
 from docutils.core import publish_string
 
-from xamlwriter.writer import XamlWriter, publish_xaml
 from xamlwriter.node import Node, TextNode
+from xamlwriter.translator import FONT_SIZE
+from xamlwriter.writer import XamlWriter, publish_xaml
 
 
 settings_overrides = {
@@ -20,7 +21,24 @@ def tree_from_string(input_data):
 
 def get_root():
     node = Node('FlowDocument')
-    node.attributes['FontSize'] = '15'
+    node.attributes['FontSize'] = FONT_SIZE
+    node.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    node.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
+    return node
+
+
+def tree_from_string_sl(input_data):
+    input_data = dedent(input_data)
+    writer = XamlWriter(flowdocument=False)
+    rv = publish_string(source=input_data, writer=writer,
+                        settings_overrides=settings_overrides)
+
+    return rv.root
+
+
+def get_root_sl():
+    node = Node('StackPanel')
+    node.attributes['x:Class'] = 'System.Windows.Controls.StackPanel'
     node.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     node.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
     return node
@@ -231,9 +249,22 @@ class TestXamlWriter(unittest.TestCase):
         self.assertEqual(tree_from_string(source), node)
 
 
-    def testSystemMessage(self):
-        self.fail()
 
+class TestSilverlightXaml(unittest.TestCase):
+
+    def testBasic(self):
+        tree = tree_from_string_sl('')
+        self.assertEqual(tree, get_root_sl())
+    
+        
+    def testParagraph(self):
+        tree = tree_from_string_sl('Hello')
+        
+        node = get_root_sl()
+        node.children.append(Node('TextBlock'))
+        node.children[0].attributes['FontSize'] = FONT_SIZE
+        node.children[0].children.append(TextNode('Hello'))
+        self.assertEqual(tree, node)
 
 
 if __name__ == '__main__':
