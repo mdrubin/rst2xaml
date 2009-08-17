@@ -44,6 +44,13 @@ def get_root_sl():
     return node
 
 
+def get_sl_paragraph():
+    para = Node('TextBlock')
+    para.attributes['FontSize'] = FONT_SIZE
+    return para
+
+
+
 class TestXamlWriter(unittest.TestCase):
     
     def testBasic(self):
@@ -261,10 +268,25 @@ class TestSilverlightXaml(unittest.TestCase):
         tree = tree_from_string_sl('Hello')
         
         node = get_root_sl()
-        node.children.append(Node('TextBlock'))
-        node.children[0].attributes['FontSize'] = FONT_SIZE
+        para = get_sl_paragraph()
+        node.children.append(para)
         node.children[0].children.append(TextNode('Hello'))
         self.assertEqual(tree, node)
+    
+        
+    def testItalics(self):
+        tree = tree_from_string_sl('*Hello*')
+        
+        node = get_root_sl()
+        para = get_sl_paragraph()
+        italic = Node('Run')
+        italic.attributes['FontStyle'] = 'Italic'
+        para.children.append()
+        para.children[0].children.append(TextNode('Hello'))
+        
+        node.children.append(para)
+        self.assertEqual(tree, node)
+    
 
 
 if __name__ == '__main__':
