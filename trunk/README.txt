@@ -13,6 +13,16 @@ from IronPython (or any other .NET language). There is an example IronPython
 script for displaying the generated XAML using a WPF
 `FlowDocumentReader <http://msdn.microsoft.com/en-us/library/system.windows.controls.flowdocumentreader.aspx>`_.
 
+
+Requirements
+------------
+
+rst2xaml depends on:
+
+* `docutils <http://docutils.sourceforge.net/>`_
+* Pygments_
+
+
 Current status
 --------------
 
