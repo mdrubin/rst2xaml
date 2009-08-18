@@ -3,7 +3,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, TextLexer
 
 from docutils import nodes
-from docutils.parsers.rst import directives, Directive
+from docutils.parsers.rst import directives
 
 from xamlwriter.xamlformatter import XamlFormatter
 
