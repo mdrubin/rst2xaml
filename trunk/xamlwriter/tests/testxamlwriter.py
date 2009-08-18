@@ -224,7 +224,7 @@ class TestXamlWriter(unittest.TestCase):
             node = Node('Paragraph')
             node.children.append(TextNode(text))
             node.attributes.update(attributes.items())
-            node.attributes['FontSize'] = fontsize
+            node.attributes['FontSize'] = str(fontsize)
             return node
         
         node = get_root()
@@ -255,7 +255,8 @@ class TestXamlWriter(unittest.TestCase):
         Heading 4
         #########
         """
-        self.assertEqual(tree_from_string(source), node)
+        result = tree_from_string(source)
+        self.assertEqual(result, node)
 
 
 

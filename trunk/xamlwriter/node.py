@@ -18,11 +18,10 @@ class Node(object):
 
 
     def __eq__(self, other):
-        return str(self) == str(other)
-        #return (type(other) == type(self) and
-                #self.name == other.name and
-                #self.attributes == other.attributes and
-                #self.children == other.children)
+        return (type(other) == type(self) and
+                self.name == other.name and
+                self.attributes == other.attributes and
+                self.children == other.children)
 
 
     def __ne__(self, other):

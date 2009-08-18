@@ -44,10 +44,11 @@ class XamlTranslator(NodeVisitor):
         self.curnode = self.curnode.parent
 
     def add_text(self, text):
-        if text:
-            if not self.flowdocument:
-                text = text.replace('\t', '&#160;&#160;&#160;&#160;')
-            self.curnode.children.append(TextNode(text))
+        if not text:
+            return
+        if not self.flowdocument:
+            text = text.replace('\t', '&#160;&#160;&#160;&#160;')
+        self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
         self.begin_node(None, name, **attributes)
@@ -127,13 +128,13 @@ class XamlTranslator(NodeVisitor):
         begun = False
         if isinstance(node.parent, nodes.document):
             begun = True
-            self.begin_node(node, 'Paragraph', FontSize=20, FontWeight='Bold')
+            self.begin_node(node, 'Paragraph', FontSize='20', FontWeight='Bold')
         elif isinstance(node.parent, nodes.section):
             atts = {}
             if (len(node.parent) >= 2 and
                 isinstance(node.parent[1], nodes.subtitle)):
                 atts['FontStyle'] = 'Italic'
-            atts['FontSize'] = 20 - self.section_level
+            atts['FontSize'] = str(20 - self.section_level)
             self.begin_node(node, 'Paragraph', **atts)
             begun = True
             # We don't do back-reference link for title
