@@ -188,7 +188,7 @@ class XamlTranslator(NodeVisitor):
     def visit_literal_block(self, node):
         # only used for Silverlight
         self.in_literal = True
-        self.begin_node(node, 'TextBlock', Margin="0,10,0,0", FontSize="15",
+        self.begin_node(node, 'TextBlock', Margin="0,10", FontSize="15",
                         TextWrapping="Wrap", FontFamily="Consolas, Global Monospace")
         
     def depart_literal_block(self, node):
