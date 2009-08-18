@@ -28,6 +28,7 @@ class XamlTranslator(NodeVisitor):
         self.context = []
         self.initial_header_level = 2
         self.section_level = 0
+        self.in_literal = False
 
     def begin_node(self, node, tagname, **more_attributes):
         new_node = Node(tagname)
@@ -48,6 +49,9 @@ class XamlTranslator(NodeVisitor):
         if not text:
             return
         text = escape_xaml(text)
+        if self.in_literal:
+            assert not self.flowdocument
+            text = text.replace(' ', '&#160;').replace('\n', '<LineBreak />')
         self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
@@ -167,6 +171,16 @@ class XamlTranslator(NodeVisitor):
     def depart_subtitle(self, node):
         if self.context.pop():
             self.end_node()
+    
+    def visit_literal_block(self, node):
+        # only used for Silverlight
+        self.in_literal = True
+        self.begin_node(node, 'TextBlock', Margin="0,10,0,0", FontSize="15",
+                        TextWrapping="Wrap", FontFamily="Consolas, Global Monospace")
+        
+    def depart_literal_block(self, node):
+        self.in_literal = False
+        self.end_node()
 
 
 """
