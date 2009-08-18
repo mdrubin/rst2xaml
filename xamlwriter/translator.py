@@ -90,7 +90,7 @@ class XamlTranslator(NodeVisitor):
     
     trivial_nodes_silverlight = {
         'paragraph': ('TextBlock', {'FontSize': FONT_SIZE, 
-                                    'Margin': "0,10,0,0",
+                                    'Margin': "0,10",
                                     'TextWrapping': "Wrap"}), 
         'emphasis': ('Run', {'FontStyle': 'Italic'}),
         'strong': ('Run', {'FontWeight': 'Bold'}),
