@@ -36,8 +36,6 @@ class XamlFormatter(Formatter):
             if style['underline']:
                 # not used ?
                 pass
-            if not self.flowdocument:
-                format_string += ' FontFamily="Consolas, Global Monospace"'
             self.styles[token] = format_string
 
 
@@ -56,11 +54,13 @@ class XamlFormatter(Formatter):
         linewise, e.g. line number generators.
         """
         source = self._format_lines(tokensource)
-
-        start = end = ''
+        
         if self.flowdocument:
             start = '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">'
             end = '</Paragraph>'
+        else:
+            start = '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15">'
+            end = '</TextBlock>'
             
         outfile.write(start)
         for t, piece in source:
