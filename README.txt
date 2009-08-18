@@ -16,9 +16,6 @@ script for displaying the generated XAML using a WPF
 Current status
 --------------
 
-The pygments formatter works but the xaml (XML) escaping is not implemented
-properly.
-
 The docutils writer for FlowDocument XAML can currently handle the following
 markup features:
 
@@ -67,6 +64,3 @@ The tests use the `discover module <http://pypi.python.org/pypi/discover>`_,
 which is included in the repository for convenience. You run the tests with:
 
     `python discover.py`
-
-The currently failing tests are there as placeholders to remind me that I
-haven't implemented proper XML escaping yet...

@@ -13,8 +13,6 @@ MARGIN = "16,0,0,0"
 
 class XamlTranslator(NodeVisitor):
 
-    words_and_spaces = re.compile(r'\S+| +|\n')
-
     def __init__(self, document, flowdocument=True):
         NodeVisitor.__init__(self, document)
         self.flowdocument = flowdocument
