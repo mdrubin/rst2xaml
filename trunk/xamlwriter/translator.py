@@ -90,7 +90,10 @@ class XamlTranslator(NodeVisitor):
     
     trivial_nodes_silverlight = {
         'paragraph': ('TextBlock', {'FontSize': FONT_SIZE, 
-                                    'Margin': "0,10",
+                                    'Margin': "0,10,0,0",
+                                    'TextWrapping': "Wrap"}), 
+        'line_block': ('TextBlock', {'FontSize': FONT_SIZE, 
+                                    'Margin': "0,10,0,0",
                                     'TextWrapping': "Wrap"}), 
         'emphasis': ('Run', {'FontStyle': 'Italic'}),
         'strong': ('Run', {'FontWeight': 'Bold'}),
@@ -128,17 +131,10 @@ class XamlTranslator(NodeVisitor):
         raise SkipNode
     
     def visit_line(self, node):
-        if not self.flowdocument:
-            tagname, atts = self.trivial_nodes_silverlight['paragraph']
-            atts = dict(atts)
-            atts.pop('Margin')
-            self.begin_node(node, tagname, **atts)
+        pass
     
     def depart_line(self, node):
-        if self.flowdocument:
-            self.add_node('LineBreak')
-        else:
-            self.end_node()
+        self.add_node('LineBreak')
     
     def visit_title(self, node):
         begun = False
@@ -188,7 +184,7 @@ class XamlTranslator(NodeVisitor):
     def visit_literal_block(self, node):
         # only used for Silverlight
         self.in_literal = True
-        self.begin_node(node, 'TextBlock', Margin="0,10", FontSize="15",
+        self.begin_node(node, 'TextBlock', Margin="0,10,0,0", FontSize="15",
                         TextWrapping="Wrap", FontFamily="Consolas, Global Monospace")
         
     def depart_literal_block(self, node):

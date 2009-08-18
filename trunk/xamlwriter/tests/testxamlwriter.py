@@ -47,7 +47,7 @@ def get_root_sl():
 def get_sl_paragraph():
     para = Node('TextBlock')
     para.attributes['FontSize'] = FONT_SIZE
-    para.attributes['Margin'] = "0,10"
+    para.attributes['Margin'] = "0,10,0,0"
     para.attributes['TextWrapping'] = "Wrap"
     return para
 
@@ -361,15 +361,12 @@ class TestSilverlightXaml(unittest.TestCase):
     def testLineBlock(self):
         node = get_root_sl()
         para = get_sl_paragraph()
-        del para.attributes['Margin']
         para.children.append(TextNode('foo'))
-        
-        para2 = get_sl_paragraph()
-        del para2.attributes['Margin']
-        para2.children.append(TextNode('bar'))
+        para.children.append(Node('LineBreak'))
+        para.children.append(TextNode('bar'))
+        para.children.append(Node('LineBreak'))
         
         node.children.append(para)
-        node.children.append(para2)
         
         actual = tree_from_string_sl("""\
             | foo
@@ -378,6 +375,29 @@ class TestSilverlightXaml(unittest.TestCase):
         self.assertEqual(actual, node)
     
     
+    def DONTtestBulletList(self):
+        node = get_root_sl()
+        def get_item(text):
+            node = Node('ListItem')
+            para = Node('Paragraph')
+            para.children.append(TextNode(text))
+            node.children.append(para)
+            return node
+        
+        list_node = Node('List')
+        list_node.children.append(get_item('first'))
+        list_node.children.append(get_item('second'))
+        list_node.children.append(get_item('third'))
+        
+        node.children.append(list_node)
+        
+        actual = tree_from_string_sl("""\
+            * first
+            * second
+            * third""")
+        
+        self.assertEqual(actual, node)
+
 
 if __name__ == '__main__':
     unittest.main()
