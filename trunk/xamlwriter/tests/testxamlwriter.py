@@ -54,11 +54,6 @@ def get_sl_paragraph():
 
 
 class TestXamlWriter(unittest.TestCase):
-    
-    def testXamlEscape(self):
-        # Need to test Xml escaping when adding text
-        
-        self.fail()
 
 
     def testBasic(self):
@@ -72,6 +67,15 @@ class TestXamlWriter(unittest.TestCase):
         node = get_root()
         node.children.append(Node('Paragraph'))
         node.children[0].children.append(TextNode('Hello'))
+        self.assertEqual(tree, node)
+
+        
+    def testXamlEscape(self):
+        tree = tree_from_string('"&<\'>"')
+        
+        node = get_root()
+        node.children.append(Node('Paragraph'))
+        node.children[0].children.append(TextNode('&quot;&amp;&lt;&apos;&gt;&quot;'))
         self.assertEqual(tree, node)
     
         
