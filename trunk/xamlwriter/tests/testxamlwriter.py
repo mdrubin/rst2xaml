@@ -55,7 +55,6 @@ def get_sl_paragraph():
 
 class TestXamlWriter(unittest.TestCase):
 
-
     def testBasic(self):
         tree = tree_from_string('')
         self.assertEqual(tree, get_root())
@@ -341,6 +340,19 @@ class TestSilverlightXaml(unittest.TestCase):
         node = get_root_sl()
         node.children.append(TextNode('foo'))
         self.assertEqual(output, node.to_string())
+        
+    
+    def testLiteralBlock(self):
+        node = get_root_sl()
+        
+        literal = get_sl_paragraph()
+        literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
+        # XXXX do we want the literal paragraph (TextBlock) to have NoWrap set?
+        node.children.append(literal)
+        
+        literal.children.append(TextNode('foo<LineBreak />foo&#160;&#160;foo'))
+        
+        self.assertEqual(tree_from_string_sl('::\n\n    foo\n    foo  foo\n'), node)
 
 
 if __name__ == '__main__':
