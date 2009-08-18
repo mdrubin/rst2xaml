@@ -46,8 +46,6 @@ class XamlTranslator(NodeVisitor):
     def add_text(self, text):
         if not text:
             return
-        if not self.flowdocument:
-            text = text.replace('\t', '&#160;&#160;&#160;&#160;')
         self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
