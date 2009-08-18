@@ -56,7 +56,8 @@ def get_sl_paragraph():
 class TestXamlWriter(unittest.TestCase):
     
     def testXamlEscape(self):
-        # Need to test Xml escaping when creating text nodes
+        # Need to test Xml escaping when adding text
+        
         self.fail()
 
 
