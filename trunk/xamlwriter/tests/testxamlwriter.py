@@ -55,6 +55,11 @@ def get_sl_paragraph():
 
 class TestXamlWriter(unittest.TestCase):
     
+    def testXamlEscape(self):
+        # Need to test Xml escaping when creating text nodes
+        self.fail()
+
+
     def testBasic(self):
         tree = tree_from_string('')
         self.assertEqual(tree, get_root())
@@ -265,11 +270,6 @@ class TestSilverlightXaml(unittest.TestCase):
     def testBasic(self):
         tree = tree_from_string_sl('')
         self.assertEqual(tree, get_root_sl())
-
-        
-    def testWhitespace(self):
-        # need to test that tabs become 4x '&#160;'
-        self.fail()
 
         
     def testParagraph(self):
