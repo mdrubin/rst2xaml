@@ -49,10 +49,16 @@ class XamlTranslator(NodeVisitor):
         if not text:
             return
         text = escape_xaml(text)
-        if self.in_literal:
-            assert not self.flowdocument
-            text = text.replace(' ', '&#160;').replace('\n', '<LineBreak />')
-        self.curnode.children.append(TextNode(text))
+        if not self.in_literal:
+            self.curnode.children.append(TextNode(text))
+            return
+        assert not self.flowdocument
+        text = text.replace(' ', '&#160;')
+        parts = text.split('\n')
+        for part in parts[:-1]:
+            self.curnode.children.append(TextNode(part))
+            self.curnode.children.append(Node('LineBreak'))
+        self.curnode.children.append(TextNode(parts[-1]))
 
     def add_node(self, name, text='', **attributes):
         self.begin_node(None, name, **attributes)
@@ -122,10 +128,15 @@ class XamlTranslator(NodeVisitor):
         raise SkipNode
     
     def visit_line(self, node):
-        pass
+        if not self.flowdocument:
+            tagname, atts = self.trivial_nodes_silverlight['paragraph']
+            self.begin_node(node, tagname, **atts)
     
     def depart_line(self, node):
-        self.add_node('LineBreak')
+        if self.flowdocument:
+            self.add_node('LineBreak')
+        else:
+            self.end_node()
     
     def visit_title(self, node):
         begun = False

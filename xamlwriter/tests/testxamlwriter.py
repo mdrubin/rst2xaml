@@ -350,9 +350,30 @@ class TestSilverlightXaml(unittest.TestCase):
         # XXXX do we want the literal paragraph (TextBlock) to have NoWrap set?
         node.children.append(literal)
         
-        literal.children.append(TextNode('foo<LineBreak />foo&#160;&#160;foo'))
+        literal.children.append(TextNode('foo'))
+        literal.children.append(Node('LineBreak'))
+        literal.children.append(TextNode('foo&#160;&#160;foo'))
         
-        self.assertEqual(tree_from_string_sl('::\n\n    foo\n    foo  foo\n'), node)
+        result = tree_from_string_sl('::\n\n    foo\n    foo  foo\n')
+        self.assertEqual(result, node)
+    
+    
+    def testLineBlock(self):
+        node = get_root_sl()
+        para = get_sl_paragraph()
+        para.children.append(TextNode('foo'))
+        
+        para2 = get_sl_paragraph()
+        para2.children.append(TextNode('bar'))
+        
+        node.children.append(para)
+        node.children.append(para2)
+        
+        actual = tree_from_string_sl("""\
+            | foo
+            | bar""")
+        
+        self.assertEqual(actual, node)
 
 
 if __name__ == '__main__':
