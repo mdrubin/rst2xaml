@@ -1,9 +1,12 @@
 import copy
 import re
 
-from xamlwriter.node import ErrorNode, Node, TextNode
 from docutils import nodes
 from docutils.nodes import NodeVisitor, SkipNode
+
+from xamlwriter.node import ErrorNode, Node, TextNode
+from xamlwriter.utils import escape_xaml
+
 
 FONT_SIZE = '15'
 MARGIN = "16,0,0,0"
@@ -46,6 +49,7 @@ class XamlTranslator(NodeVisitor):
     def add_text(self, text):
         if not text:
             return
+        text = escape_xaml(text)
         self.curnode.children.append(TextNode(text))
 
     def add_node(self, name, text='', **attributes):
@@ -110,10 +114,9 @@ class XamlTranslator(NodeVisitor):
         else:
             getattr(self, 'depart_' + node_name, self.unknown_departure)(node)
 
-    def visit_xaml(self, node):
-        node = copy.deepcopy(node['xaml'])
-        node.parent = self.curnode
-        self.curnode.children.append(node)
+    def visit_raw(self, node):
+        if 'xaml' in node.get('format', '').split():
+            self.curnode.children.append(TextNode(node.astext()))
         raise SkipNode
     
     def visit_line(self, node):

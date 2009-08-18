@@ -1,29 +1,10 @@
 # a xaml formatter for pygments
 
-
-import sys, os
-import StringIO
-
-try:
-    set
-except NameError:
-    from sets import Set as set
-
 from pygments.formatter import Formatter
-from pygments.token import Token, Text, STANDARD_TYPES
-from pygments.util import get_bool_opt, get_int_opt, get_list_opt
 
+from xamlwriter.utils import escape_xaml
 
 __all__ = ['XamlFormatter']
-
-
-def escape_xaml(text):
-    """Escape &, <, > as well as single and double quotes for HTML."""
-    return text.replace('&', '&amp;').  \
-                replace('<', '&lt;').   \
-                replace('>', '&gt;').   \
-                replace('"', '&quot;'). \
-                replace("'", '&#39;')
 
 
 class XamlFormatter(Formatter):
@@ -40,7 +21,6 @@ class XamlFormatter(Formatter):
             self.lineseparator = '\n'
         else:
             self.lineseparator = '<LineBreak />'
-        self.hl_lines = set()
         self.styles = {}
         
         for token, style in self.style:
