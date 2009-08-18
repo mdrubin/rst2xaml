@@ -60,12 +60,6 @@ class TestNode(unittest.TestCase):
         self.assertEqual(node.to_string(), '<foo bar="baz" />')
 
 
-    def testToStringAttributesXmlEscape(self):
-        # test escaping xml characters in attributes
-        self.fail()
-
-
-
 class TestTextNode(unittest.TestCase):
 
     def testConstruction(self):
@@ -97,13 +91,6 @@ class TestTextNode(unittest.TestCase):
     def testToString(self):
         node = TextNode('foo')
         self.assertEqual(node.to_string(), 'foo')
-
-
-    def testToStringXmlEscape(self):
-        node = TextNode("&<'")
-        self.fail()
-
-
 
 
 class TestErrorNode(unittest.TestCase):
