@@ -1,20 +1,14 @@
 
 from pygments import highlight
-from pygments.lexers import get_lexer_by_name
+from pygments.lexers import get_lexer_by_name, TextLexer
 
-from docutils.parsers.rst import roles, directives, Directive
+from docutils import nodes
+from docutils.parsers.rst import directives, Directive
 
 from xamlwriter.xamlformatter import XamlFormatter
 
-
-
-from docutils import nodes
-from docutils.parsers.rst import directives
-
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name, TextLexer
-
-
+# set externally to configure whether FlowDocument or Silverlight
+# XAML is to be output
 flowdocument = True
 
 def pygments_directive(name, arguments, options, content, lineno,
