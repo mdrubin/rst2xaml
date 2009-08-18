@@ -328,5 +328,14 @@ class TestSilverlightXaml(unittest.TestCase):
         self.assertEqual(tree, node)
         
 
+    def testRawXaml(self):
+        data = '.. raw:: xaml\n\n   foo'
+        output = publish_xaml(data, flowdocument=False)
+
+        node = get_root_sl()
+        node.children.append(TextNode('foo'))
+        self.assertEqual(output, node.to_string())
+
+
 if __name__ == '__main__':
     unittest.main()
