@@ -361,9 +361,11 @@ class TestSilverlightXaml(unittest.TestCase):
     def testLineBlock(self):
         node = get_root_sl()
         para = get_sl_paragraph()
+        del para.attributes['Margin']
         para.children.append(TextNode('foo'))
         
         para2 = get_sl_paragraph()
+        del para2.attributes['Margin']
         para2.children.append(TextNode('bar'))
         
         node.children.append(para)
@@ -374,6 +376,8 @@ class TestSilverlightXaml(unittest.TestCase):
             | bar""")
         
         self.assertEqual(actual, node)
+    
+    
 
 
 if __name__ == '__main__':

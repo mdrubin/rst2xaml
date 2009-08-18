@@ -130,6 +130,8 @@ class XamlTranslator(NodeVisitor):
     def visit_line(self, node):
         if not self.flowdocument:
             tagname, atts = self.trivial_nodes_silverlight['paragraph']
+            atts = dict(atts)
+            atts.pop('Margin')
             self.begin_node(node, tagname, **atts)
     
     def depart_line(self, node):
