@@ -31,6 +31,7 @@ class XamlTranslator(NodeVisitor):
         self.in_literal = False
         self.list_item = 0
         self.done_first_item = True
+        self.bullet_list = True
 
     def begin_node(self, node, tagname, **more_attributes):
         new_node = Node(tagname)
@@ -205,13 +206,21 @@ class XamlTranslator(NodeVisitor):
     def depart_literal_block(self, node):
         self.in_literal = False
         self.end_node()
+    
+    def visit_enumerated_list(self, node):
+        # only used for Silverlight
+        self.bullet_list = False
+        self.visit_bullet_list(node)
+        
+    def depart_enumerated_list(self, node):
+        self.depart_bullet_list(node)
         
     def visit_bullet_list(self, node):
-        self.list_item = 0
         # only used for Silverlight
-        self.begin_node(node, 'Grid')
+        self.list_item = 0
+        self.begin_node(node, 'Grid', Margin='0,10,0,0')
         self.begin_node(node, 'Grid.ColumnDefinitions')
-        self.add_node('ColumnDefinition', Width='10')
+        self.add_node('ColumnDefinition', Width='Auto')
         self.add_node('ColumnDefinition')
         self.end_node()
 
@@ -220,13 +229,17 @@ class XamlTranslator(NodeVisitor):
         rows.children = [Node('RowDefinition') for _ in range(self.list_item)]
         self.curnode.children.insert(1, rows)
         self.end_node()
+        self.bullet_list = True
         
     def visit_list_item(self, node):
         self.done_first_item = False
+        point = '&#8226;'
+        if not self.bullet_list:
+            point = str(self.list_item + 1) + '.'
         # only used for Silverlight
-        self.add_node('TextBlock', '&#8226;', escape=False, 
+        self.add_node('TextBlock', point, escape=False, 
                       **{'Grid.Column': '0', 'Grid.Row': str(self.list_item)})
-        self.begin_node(node, 'StackPanel', 
+        self.begin_node(node, 'StackPanel',
                       **{'Grid.Column': '1', 'Grid.Row': str(self.list_item)})
         self.list_item += 1
 
