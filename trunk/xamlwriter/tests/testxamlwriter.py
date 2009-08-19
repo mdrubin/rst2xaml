@@ -399,6 +399,7 @@ class TestSilverlightXaml(unittest.TestCase):
         first_text.attributes['Grid.Row'] = '0'
         first_text.attributes['Grid.Column'] = '1'
         para = get_sl_paragraph()
+        del para.attributes['Margin']
         para.children.append(TextNode('first'))
         first_text.children.append(para)
         
@@ -411,6 +412,7 @@ class TestSilverlightXaml(unittest.TestCase):
         second_text.attributes['Grid.Row'] = '1'
         second_text.attributes['Grid.Column'] = '1'
         para = get_sl_paragraph()
+        del para.attributes['Margin']
         para.children.append(TextNode('second'))
         second_text.children.append(para)
         
@@ -423,6 +425,7 @@ class TestSilverlightXaml(unittest.TestCase):
         third_text.attributes['Grid.Row'] = '2'
         third_text.attributes['Grid.Column'] = '1'
         para = get_sl_paragraph()
+        del para.attributes['Margin']
         para.children.append(TextNode('third'))
         third_text.children.append(para)
         
