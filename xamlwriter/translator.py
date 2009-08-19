@@ -198,6 +198,7 @@ class XamlTranslator(NodeVisitor):
         self.end_node()
         
     def visit_bullet_list(self, node):
+        self.list_item = 0
         # only used for Silverlight
         self.begin_node(node, 'Grid')
         self.begin_node(node, 'Grid.ColumnDefinitions')
@@ -205,9 +206,8 @@ class XamlTranslator(NodeVisitor):
         self.add_node('ColumnDefinition')
         self.end_node()
 
-    def depart_bullet_list(self, node):
+    def depart_bullet_list(self, node): 
         self.end_node()
-        self.list_item = 0
         
     def visit_list_item(self, node):
         # only used for Silverlight
@@ -222,6 +222,6 @@ class XamlTranslator(NodeVisitor):
 
 
 """
- 
+Need compact paragraphs for Silverlight bullet item paragraphs...
 Can use Floater for sidebar.
 """
