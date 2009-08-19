@@ -20,7 +20,7 @@ class Node(object):
     def __eq__(self, other):
         return (type(other) == type(self) and
                 self.name == other.name and
-                self.attributes == other.attributes and
+                dict(self.attributes) == dict(other.attributes) and
                 self.children == other.children)
 
 
