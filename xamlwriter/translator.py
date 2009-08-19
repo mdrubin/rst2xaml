@@ -93,9 +93,6 @@ class XamlTranslator(NodeVisitor):
     }
     
     trivial_nodes_silverlight = {
-        'line_block': ('TextBlock', {'FontSize': FONT_SIZE, 
-                                    'Margin': "0,10,0,0",
-                                    'TextWrapping': "Wrap"}), 
         'emphasis': ('Run', {'FontStyle': 'Italic'}),
         'strong': ('Run', {'FontWeight': 'Bold'}),
         'block_quote': ('StackPanel', {'Margin': MARGIN}),
@@ -146,6 +143,16 @@ class XamlTranslator(NodeVisitor):
     def depart_paragraph(self, node):
         self.end_node()
     
+    def visit_line_block(self, node):
+        # Silverlight only
+        self.begin_node(node, 'TextBlock', Margin= "0,10,0,0", FontSize=FONT_SIZE, TextWrapping="Wrap")
+        
+    def depart_line_block(self, node):
+        if self.curnode.children[-1] == Node('LineBreak'):
+            self.curnode.children.pop()
+
+        self.end_node()
+        
     def visit_line(self, node):
         pass
     
@@ -232,23 +239,30 @@ class XamlTranslator(NodeVisitor):
         self.bullet_list = True
         
     def visit_list_item(self, node):
+        # only used for Silverlight
         self.done_first_item = False
         point = '&#8226;'
         if not self.bullet_list:
             point = str(self.list_item + 1) + '.'
-        # only used for Silverlight
         self.add_node('TextBlock', point, escape=False, 
                       **{'Grid.Column': '0', 'Grid.Row': str(self.list_item)})
-        self.begin_node(node, 'StackPanel',
+        self.begin_node(node, 'StackPanel', Margin="5,0,0,0",
                       **{'Grid.Column': '1', 'Grid.Row': str(self.list_item)})
         self.list_item += 1
 
     def depart_list_item(self, node):
         self.done_first_item = True
         self.end_node()
-
+    
+    def visit_literal(self, node):
+        # only used for Silverlight
+        self.in_literal = True
+        self.begin_node(node, 'Run', FontFamily='Consolas, Global Monospace')
+    
+    def depart_literal(self, node):
+        self.in_literal = False
+        self.end_node()
 
 """
-Need compact paragraphs for Silverlight bullet item paragraphs...
-Can use Floater for sidebar.
+Can use Floater for sidebar (FlowDocument).
 """

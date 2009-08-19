@@ -78,6 +78,7 @@ def get_grid_sl(items, enumerated=True):
         bullet_text = Node('StackPanel')
         bullet_text.attributes['Grid.Row'] = str(i)
         bullet_text.attributes['Grid.Column'] = '1'
+        bullet_text.attributes['Margin'] = "5,0,0,0"
         para = get_sl_paragraph()
         del para.attributes['Margin']
         para.children.append(TextNode(item))
@@ -400,7 +401,6 @@ class TestSilverlightXaml(unittest.TestCase):
         para.children.append(TextNode('foo'))
         para.children.append(Node('LineBreak'))
         para.children.append(TextNode('bar'))
-        para.children.append(Node('LineBreak'))
         
         node.children.append(para)
         
@@ -429,6 +429,19 @@ class TestSilverlightXaml(unittest.TestCase):
             #. third""")
         
         self.assertEqual(actual, node)
+        
+    
+    def testLiteral(self):
+        node = get_root_sl()
+        para = get_sl_paragraph()
+        literal = Node('Run')
+        literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
+        para.children.append(literal)
+        literal.children.append(TextNode('foo&#160;&#160;bar'))
+        node.children.append(para)
+        
+        self.assertEqual(tree_from_string_sl('``foo  bar``'), node)
+
 
 
 if __name__ == '__main__':
