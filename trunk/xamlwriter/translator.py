@@ -161,16 +161,20 @@ class XamlTranslator(NodeVisitor):
     
     def visit_title(self, node):
         begun = False
+        node_type = 'Paragraph'
+        attrs = {}
+        if not self.flowdocument:
+            node_type = 'TextBlock'
+            attrs['Margin'] = '0,10,0,0'
         if isinstance(node.parent, nodes.document):
             begun = True
-            self.begin_node(node, 'Paragraph', FontSize='20', FontWeight='Bold')
+            self.begin_node(node, node_type, FontSize='20', FontWeight='Bold', **attrs)
         elif isinstance(node.parent, nodes.section):
-            atts = {}
             if (len(node.parent) >= 2 and
                 isinstance(node.parent[1], nodes.subtitle)):
-                atts['FontStyle'] = 'Italic'
-            atts['FontSize'] = str(20 - self.section_level)
-            self.begin_node(node, 'Paragraph', **atts)
+                attrs['FontStyle'] = 'Italic'
+            attrs['FontSize'] = str(20 - self.section_level)
+            self.begin_node(node, node_type, **attrs)
             begun = True
             # We don't do back-reference link for title
         else:
@@ -192,8 +196,13 @@ class XamlTranslator(NodeVisitor):
     def visit_subtitle(self, node):
         begun = False
         if isinstance(node.parent, nodes.document):
-            self.begin_node(node, 'Paragraph', FontSize='19',
-                            FontStyle='Italic')
+            node_type = 'Paragraph'
+            attrs = {}
+            if not self.flowdocument:
+                node_type = 'TextBlock'
+                attrs['Margin'] = '0,10,0,0'
+            self.begin_node(node, node_type, FontSize='19',
+                            FontStyle='Italic', **attrs)
             begun = True
         else:
             # Also used for sidebar and section
@@ -262,6 +271,8 @@ class XamlTranslator(NodeVisitor):
     def depart_literal(self, node):
         self.in_literal = False
         self.end_node()
+
+
 
 """
 Can use Floater for sidebar (FlowDocument).

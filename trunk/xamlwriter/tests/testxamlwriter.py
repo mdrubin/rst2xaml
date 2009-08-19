@@ -441,6 +441,51 @@ class TestSilverlightXaml(unittest.TestCase):
         node.children.append(para)
         
         self.assertEqual(tree_from_string_sl('``foo  bar``'), node)
+        
+        
+    def testTitleSubtitleSection(self):
+        def get_title(fontsize, text, FontWeight=None, FontStyle=None):
+            node = Node('TextBlock')
+            node.children.append(TextNode(text))
+            if FontWeight is not None:
+                node.attributes['FontWeight'] = FontWeight
+            node.attributes['Margin'] = "0,10,0,0"
+            if FontStyle is not None:
+                node.attributes['FontStyle'] = FontStyle
+            node.attributes['FontSize'] = str(fontsize)
+            return node
+        
+        node = get_root_sl()
+        node.children.append(get_title(20, 'Title', FontWeight='Bold'))
+        node.children.append(get_title(19, 'Subtitle', FontStyle='Italic'))
+        node.children.append(get_title(19, 'Heading 1'))
+        node.children.append(get_title(18, 'Heading 2'))
+        node.children.append(get_title(17, 'Heading 3'))
+        node.children.append(get_title(16, 'Heading 4'))
+        
+        source = """\
+        =======
+         Title
+        =======
+        ----------
+         Subtitle
+        ----------
+        
+        Heading 1
+        =========
+        
+        Heading 2
+        ---------
+        
+        Heading 3
+        ~~~~~~~~~
+        
+        Heading 4
+        #########
+        """
+        result = tree_from_string_sl(source)
+        self.assertEqual(result, node)
+
 
 
 
