@@ -30,6 +30,7 @@ class XamlTranslator(NodeVisitor):
         self.section_level = 0
         self.in_literal = False
         self.list_item = 0
+        self.done_first_item = True
 
     def begin_node(self, node, tagname, **more_attributes):
         new_node = Node(tagname)
@@ -74,7 +75,7 @@ class XamlTranslator(NodeVisitor):
     def unknown_departure(self, node):
         return
 
-    trivial_nodes = {
+    trivial_nodes_flowdocument = {
         'paragraph': ('Paragraph', {}),
         'emphasis': ('Italic', {}),
         'strong': ('Bold', {}),
@@ -91,9 +92,6 @@ class XamlTranslator(NodeVisitor):
     }
     
     trivial_nodes_silverlight = {
-        'paragraph': ('TextBlock', {'FontSize': FONT_SIZE, 
-                                    'Margin': "0,10,0,0",
-                                    'TextWrapping': "Wrap"}), 
         'line_block': ('TextBlock', {'FontSize': FONT_SIZE, 
                                     'Margin': "0,10,0,0",
                                     'TextWrapping': "Wrap"}), 
@@ -101,6 +99,13 @@ class XamlTranslator(NodeVisitor):
         'strong': ('Run', {'FontWeight': 'Bold'}),
         'block_quote': ('StackPanel', {'Margin': MARGIN}),
     }
+    
+    @property
+    def trivial_nodes(self):
+        if self.flowdocument:
+            return self.trivial_nodes_flowdocument
+        return self.trivial_nodes_silverlight
+        
 
     def dispatch_visit(self, node):
         # don't call visitor methods for trivial nodes
@@ -108,12 +113,8 @@ class XamlTranslator(NodeVisitor):
         if node_name == 'Text':
             self.add_text(node.astext())
             raise SkipNode
-        if self.flowdocument:
-            trivial_nodes_dict = self.trivial_nodes
-        else:
-            trivial_nodes_dict = self.trivial_nodes_silverlight
             
-        tagname, atts = trivial_nodes_dict.get(node_name, (None, None))
+        tagname, atts = self.trivial_nodes.get(node_name, (None, None))
         if tagname:
             self.begin_node(node, tagname, **atts)
         else:
@@ -121,11 +122,8 @@ class XamlTranslator(NodeVisitor):
 
     def dispatch_departure(self, node):
         node_name = node.__class__.__name__
-        if self.flowdocument:
-            trivial_nodes_dict = self.trivial_nodes
-        else:
-            trivial_nodes_dict = self.trivial_nodes_silverlight
-        tagname, atts = trivial_nodes_dict.get(node_name, (None, None))
+        
+        tagname, atts = self.trivial_nodes.get(node_name, (None, None))
         if tagname:
             self.end_node()
         else:
@@ -135,6 +133,17 @@ class XamlTranslator(NodeVisitor):
         if 'xaml' in node.get('format', '').split():
             self.curnode.children.append(TextNode(node.astext()))
         raise SkipNode
+    
+    def visit_paragraph(self, node):
+        # Silverlight only
+        attrs = {'FontSize': FONT_SIZE, 'TextWrapping': "Wrap"}
+        if self.done_first_item:
+            attrs['Margin'] = "0,10,0,0"
+        self.begin_node(node, 'TextBlock', **attrs)
+        self.done_first_item = True
+        
+    def depart_paragraph(self, node):
+        self.end_node()
     
     def visit_line(self, node):
         pass
@@ -207,9 +216,13 @@ class XamlTranslator(NodeVisitor):
         self.end_node()
 
     def depart_bullet_list(self, node): 
+        rows = Node('Grid.RowDefinitions')
+        rows.children = [Node('RowDefinition') for _ in range(self.list_item)]
+        self.curnode.children.insert(1, rows)
         self.end_node()
         
     def visit_list_item(self, node):
+        self.done_first_item = False
         # only used for Silverlight
         self.add_node('TextBlock', '&#8226;', escape=False, 
                       **{'Grid.Column': '0', 'Grid.Row': str(self.list_item)})
@@ -218,6 +231,7 @@ class XamlTranslator(NodeVisitor):
         self.list_item += 1
 
     def depart_list_item(self, node):
+        self.done_first_item = True
         self.end_node()
 
 
