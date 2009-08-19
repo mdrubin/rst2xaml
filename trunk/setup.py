@@ -22,5 +22,5 @@ setup(
     author="Michael Foord",
     author_email="michael@voidspace.org.uk",
     packages= ['xamlwriter', 'xamlwriter.tests', 'xamlwriter.modules'],
-    scripts=['rst2xaml.py', 'rst2xamlsl.py']
+    scripts=['rst2xaml.py', 'rst2xamlsl.py', 'display_xaml.py']
 )
