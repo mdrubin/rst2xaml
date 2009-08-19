@@ -22,6 +22,11 @@ rst2xaml depends on:
 * `docutils <http://docutils.sourceforge.net/>`_
 * Pygments_
 
+Tested with Python 2.5 and 2.6, but probably works fine under Python 2.4.
+
+The Silverlight output is intended to work with Moonlight (the equivalent of Silverlight 2) *and* Silverlight 3. Let me know if
+there are any problems.
+
 
 Current status
 --------------
@@ -50,9 +55,13 @@ the following markup features:
  * bold
  * italics
  * blockquotes
+ * literal blocks
+ * line blocks
+ * bullet lists
  * the raw:: xaml directive
  * the pygments code-block directive
 
+ Nested enumerated lists don't yet work correctly for either FlowDocument or Silverlight output.
 
 Scripts
 -------
