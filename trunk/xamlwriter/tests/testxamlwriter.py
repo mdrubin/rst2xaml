@@ -384,6 +384,11 @@ class TestSilverlightXaml(unittest.TestCase):
         col.attributes['Width'] = '10'
         columns.children.append(col)
         columns.children.append(Node('ColumnDefinition'))
+        rows = Node('Grid.RowDefinitions')
+        grid.children.append(rows)
+        rows.children.append(Node('RowDefinition'))
+        rows.children.append(Node('RowDefinition'))
+        rows.children.append(Node('RowDefinition'))
         
         first = Node('TextBlock')
         first.children.append(TextNode('&#8226;'))
