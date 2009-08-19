@@ -58,6 +58,7 @@ the following markup features:
  * literal blocks
  * line blocks
  * bullet lists
+ * enumerated lists
  * the raw:: xaml directive
  * the pygments code-block directive
 

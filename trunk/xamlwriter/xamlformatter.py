@@ -59,7 +59,7 @@ class XamlFormatter(Formatter):
             start = '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">'
             end = '</Paragraph>'
         else:
-            start = '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15">'
+            start = '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15" Margin="0,10,0,0">'
             end = '</TextBlock>'
             
         outfile.write(start)
