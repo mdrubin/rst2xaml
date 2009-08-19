@@ -375,21 +375,55 @@ class TestSilverlightXaml(unittest.TestCase):
         self.assertEqual(actual, node)
     
     
-    def DONTtestBulletList(self):
+    def testBulletList(self):
         node = get_root_sl()
-        def get_item(text):
-            node = Node('ListItem')
-            para = Node('Paragraph')
-            para.children.append(TextNode(text))
-            node.children.append(para)
-            return node
+        grid = Node('Grid')
+        columns = Node('Grid.ColumnDefinitions')
+        grid.children.append(columns)
+        col = Node('ColumnDefinition')
+        col.attributes['Width'] = '10'
+        columns.children.append(col)
+        columns.children.append(Node('ColumnDefinition'))
         
-        list_node = Node('List')
-        list_node.children.append(get_item('first'))
-        list_node.children.append(get_item('second'))
-        list_node.children.append(get_item('third'))
+        first = Node('TextBlock')
+        first.children.append(TextNode('&#8226;'))
+        first.attributes['Grid.Row'] = '0'
+        first.attributes['Grid.Column'] = '0'
         
-        node.children.append(list_node)
+        first_text = Node('StackPanel')
+        first_text.attributes['Grid.Row'] = '0'
+        first_text.attributes['Grid.Column'] = '1'
+        para = get_sl_paragraph()
+        para.children.append(TextNode('first'))
+        first_text.children.append(para)
+        
+        second = Node('TextBlock')
+        second.children.append(TextNode('&#8226;'))
+        second.attributes['Grid.Row'] = '1'
+        second.attributes['Grid.Column'] = '0'
+        
+        second_text = Node('StackPanel')
+        second_text.attributes['Grid.Row'] = '1'
+        second_text.attributes['Grid.Column'] = '1'
+        para = get_sl_paragraph()
+        para.children.append(TextNode('second'))
+        second_text.children.append(para)
+        
+        third = Node('TextBlock')
+        third.children.append(TextNode('&#8226;'))
+        third.attributes['Grid.Row'] = '2'
+        third.attributes['Grid.Column'] = '0'
+        
+        third_text = Node('StackPanel')
+        third_text.attributes['Grid.Row'] = '2'
+        third_text.attributes['Grid.Column'] = '1'
+        para = get_sl_paragraph()
+        para.children.append(TextNode('third'))
+        third_text.children.append(para)
+        
+        node.children.append(grid)
+        grid.children.extend([first, first_text, second, second_text, third,
+                              third_text])
         
         actual = tree_from_string_sl("""\
             * first

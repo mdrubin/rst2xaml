@@ -29,6 +29,7 @@ class XamlTranslator(NodeVisitor):
         self.initial_header_level = 2
         self.section_level = 0
         self.in_literal = False
+        self.list_item = 0
 
     def begin_node(self, node, tagname, **more_attributes):
         new_node = Node(tagname)
@@ -45,10 +46,11 @@ class XamlTranslator(NodeVisitor):
     def end_node(self):
         self.curnode = self.curnode.parent
 
-    def add_text(self, text):
+    def add_text(self, text, escape=True):
         if not text:
             return
-        text = escape_xaml(text)
+        if escape:
+            text = escape_xaml(text)
         if not self.in_literal:
             self.curnode.children.append(TextNode(text))
             return
@@ -60,9 +62,9 @@ class XamlTranslator(NodeVisitor):
             self.curnode.children.append(Node('LineBreak'))
         self.curnode.children.append(TextNode(parts[-1]))
 
-    def add_node(self, name, text='', **attributes):
+    def add_node(self, name, text='', escape=True, **attributes):
         self.begin_node(None, name, **attributes)
-        self.add_text(text)
+        self.add_text(text, escape=escape)
         self.end_node()
 
     def unknown_visit(self, node):
@@ -119,7 +121,11 @@ class XamlTranslator(NodeVisitor):
 
     def dispatch_departure(self, node):
         node_name = node.__class__.__name__
-        tagname, _ = self.trivial_nodes.get(node_name, (None, None))
+        if self.flowdocument:
+            trivial_nodes_dict = self.trivial_nodes
+        else:
+            trivial_nodes_dict = self.trivial_nodes_silverlight
+        tagname, atts = trivial_nodes_dict.get(node_name, (None, None))
         if tagname:
             self.end_node()
         else:
@@ -189,6 +195,29 @@ class XamlTranslator(NodeVisitor):
         
     def depart_literal_block(self, node):
         self.in_literal = False
+        self.end_node()
+        
+    def visit_bullet_list(self, node):
+        # only used for Silverlight
+        self.begin_node(node, 'Grid')
+        self.begin_node(node, 'Grid.ColumnDefinitions')
+        self.add_node('ColumnDefinition', Width='10')
+        self.add_node('ColumnDefinition')
+        self.end_node()
+
+    def depart_bullet_list(self, node):
+        self.end_node()
+        self.list_item = 0
+        
+    def visit_list_item(self, node):
+        # only used for Silverlight
+        self.add_node('TextBlock', '&#8226;', escape=False, 
+                      **{'Grid.Column': '0', 'Grid.Row': str(self.list_item)})
+        self.begin_node(node, 'StackPanel', 
+                      **{'Grid.Column': '1', 'Grid.Row': str(self.list_item)})
+        self.list_item += 1
+
+    def depart_list_item(self, node):
         self.end_node()
 
 
