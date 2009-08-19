@@ -51,6 +51,42 @@ def get_sl_paragraph():
     para.attributes['TextWrapping'] = "Wrap"
     return para
 
+def get_grid_sl(items, enumerated=True):
+    node = get_root_sl()
+    grid = Node('Grid')
+    grid.attributes['Margin'] = '0,10,0,0'
+    node.children.append(grid)
+    columns = Node('Grid.ColumnDefinitions')
+    grid.children.append(columns)
+    col = Node('ColumnDefinition')
+    col.attributes['Width'] = 'Auto'
+    columns.children.append(col)
+    columns.children.append(Node('ColumnDefinition'))
+    rows = Node('Grid.RowDefinitions')
+    grid.children.append(rows)
+    rows.children = [Node('RowDefinition') for _ in items]
+    
+    for i, item in enumerate(items):
+        bullet = Node('TextBlock')
+        point = '&#8226;'
+        if enumerated:
+            point = str(i + 1) + '.'
+        bullet.attributes['Grid.Row'] = str(i)
+        bullet.attributes['Grid.Column'] = '0'
+        bullet.children.append(TextNode(point))
+                               
+        bullet_text = Node('StackPanel')
+        bullet_text.attributes['Grid.Row'] = str(i)
+        bullet_text.attributes['Grid.Column'] = '1'
+        para = get_sl_paragraph()
+        del para.attributes['Margin']
+        para.children.append(TextNode(item))
+        bullet_text.children.append(para)
+        
+        grid.children.append(bullet)
+        grid.children.append(bullet_text)
+    return node
+
 
 
 class TestXamlWriter(unittest.TestCase):
@@ -376,67 +412,21 @@ class TestSilverlightXaml(unittest.TestCase):
     
     
     def testBulletList(self):
-        node = get_root_sl()
-        grid = Node('Grid')
-        columns = Node('Grid.ColumnDefinitions')
-        grid.children.append(columns)
-        col = Node('ColumnDefinition')
-        col.attributes['Width'] = '10'
-        columns.children.append(col)
-        columns.children.append(Node('ColumnDefinition'))
-        rows = Node('Grid.RowDefinitions')
-        grid.children.append(rows)
-        rows.children.append(Node('RowDefinition'))
-        rows.children.append(Node('RowDefinition'))
-        rows.children.append(Node('RowDefinition'))
-        
-        first = Node('TextBlock')
-        first.children.append(TextNode('&#8226;'))
-        first.attributes['Grid.Row'] = '0'
-        first.attributes['Grid.Column'] = '0'
-        
-        first_text = Node('StackPanel')
-        first_text.attributes['Grid.Row'] = '0'
-        first_text.attributes['Grid.Column'] = '1'
-        para = get_sl_paragraph()
-        del para.attributes['Margin']
-        para.children.append(TextNode('first'))
-        first_text.children.append(para)
-        
-        second = Node('TextBlock')
-        second.children.append(TextNode('&#8226;'))
-        second.attributes['Grid.Row'] = '1'
-        second.attributes['Grid.Column'] = '0'
-        
-        second_text = Node('StackPanel')
-        second_text.attributes['Grid.Row'] = '1'
-        second_text.attributes['Grid.Column'] = '1'
-        para = get_sl_paragraph()
-        del para.attributes['Margin']
-        para.children.append(TextNode('second'))
-        second_text.children.append(para)
-        
-        third = Node('TextBlock')
-        third.children.append(TextNode('&#8226;'))
-        third.attributes['Grid.Row'] = '2'
-        third.attributes['Grid.Column'] = '0'
-        
-        third_text = Node('StackPanel')
-        third_text.attributes['Grid.Row'] = '2'
-        third_text.attributes['Grid.Column'] = '1'
-        para = get_sl_paragraph()
-        del para.attributes['Margin']
-        para.children.append(TextNode('third'))
-        third_text.children.append(para)
-        
-        node.children.append(grid)
-        grid.children.extend([first, first_text, second, second_text, third,
-                              third_text])
-        
+        node = get_grid_sl(['first', 'second', 'third'], enumerated=False)
         actual = tree_from_string_sl("""\
             * first
             * second
             * third""")
+        
+        self.assertEqual(actual, node)
+    
+    
+    def testEnmeratedList(self):
+        node = get_grid_sl(['first', 'second', 'third'])
+        actual = tree_from_string_sl("""\
+            #. first
+            #. second
+            #. third""")
         
         self.assertEqual(actual, node)
 
