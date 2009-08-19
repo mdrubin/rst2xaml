@@ -5,6 +5,7 @@
  Subtitle
 ----------
 
+
 Heading 1
 =========
 
@@ -13,9 +14,9 @@ Heading 1
 
 A paragraph with *italic* and **bold** and an ``inline literal``.
 
-	This is a blockquote.
-	
-	So is this.
+    This is a blockquote.
+
+    So is this.
 
 Heading 2
 ---------
@@ -73,7 +74,7 @@ It looks much prettier rendered by pygments:
             # constructor
             self.value = arg
             if some_condition:
-            	raise Exception('Ouch!!')
+                raise Exception('Ouch!!')
 
     instance = ClassName('foo')
 
