@@ -31,14 +31,13 @@ there are any problems.
 Current status
 --------------
 
-The docutils writer for FlowDocument XAML can currently handle the following
+The docutils writer for both FlowDocument and Silverlight XAML can currently handle the following
 markup features:
 
  * title and headings
  * paragraphs
  * bold
  * italics
- * superscript
  * literal blocks
  * inline literals
  * line blocks
@@ -48,21 +47,9 @@ markup features:
  * the raw:: xaml directive
  * the pygments code-block directive
 
-The writer for Silverlight XAML, a subset of FlowDocument, can currently handle
-the following markup features:
+In addition the FlowDocument output can handle superscript, although that only works for fonts that support it.
 
- * paragraphs
- * bold
- * italics
- * blockquotes
- * literal blocks
- * line blocks
- * bullet lists
- * enumerated lists
- * the raw:: xaml directive
- * the pygments code-block directive
-
- Nested enumerated lists don't yet work correctly for either FlowDocument or Silverlight output.
+Nested enumerated lists don't yet work correctly for either FlowDocument or Silverlight output.
 
 Scripts
 -------
