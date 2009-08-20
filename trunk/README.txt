@@ -79,3 +79,14 @@ Development
 The development version of rst2xaml is hosted on a google project page:
 
 * http://code.google.com/p/rst2xaml/
+
+
+CHANGELOG
+---------
+
+2009/08/20 Version 0.1.0
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Initial release.
+
+
