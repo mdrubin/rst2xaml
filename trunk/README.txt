@@ -71,3 +71,11 @@ The tests use the `discover module <http://pypi.python.org/pypi/discover>`_,
 which is included in the repository for convenience. You run the tests with:
 
     `python discover.py`
+    
+
+Development
+-----------
+
+The development version of rst2xaml is hosted on a google project page:
+
+* http://code.google.com/p/rst2xaml/
