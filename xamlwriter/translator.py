@@ -13,7 +13,7 @@ MARGIN = "16,0,0,0"
 
 class XamlTranslator(NodeVisitor):
 
-    def __init__(self, document, flowdocument=True):
+    def __init__(self, document, flowdocument=True, xclass=True):
         NodeVisitor.__init__(self, document)
         self.flowdocument = flowdocument
         if flowdocument:
@@ -21,7 +21,8 @@ class XamlTranslator(NodeVisitor):
             self.root.attributes['FontSize'] = FONT_SIZE
         else:
             self.root = Node('StackPanel')
-            self.root.attributes['x:Class'] = 'System.Windows.Controls.StackPanel'
+            if xclass:
+                self.root.attributes['x:Class'] = 'System.Windows.Controls.StackPanel'
         self.root.attributes['xmlns'] = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         self.root.attributes['xmlns:x'] = "http://schemas.microsoft.com/winfx/2006/xaml"
         self.curnode = self.root
