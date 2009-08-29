@@ -256,7 +256,7 @@ class XamlTranslator(NodeVisitor):
             point = str(self.list_item + 1) + '.'
         self.add_node('TextBlock', point, escape=False, 
                       **{'Grid.Column': '0', 'Grid.Row': str(self.list_item)})
-        self.begin_node(node, 'StackPanel', Margin="5,0,0,0",
+        self.begin_node(node, 'StackPanel', Margin="5,0,0,5",
                       **{'Grid.Column': '1', 'Grid.Row': str(self.list_item)})
         self.list_item += 1
 
