@@ -16,7 +16,7 @@ require XAML output from Pygments."""
 
 
 setup(
-    name='xamlwriter',
+    name='rst2xaml',
     version=version,
     description=description,
     author="Michael Foord",
