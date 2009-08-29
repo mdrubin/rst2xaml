@@ -76,9 +76,9 @@ def get_grid_sl(items, enumerated=True):
         bullet.children.append(TextNode(point))
                                
         bullet_text = Node('StackPanel')
+        bullet_text.attributes['Margin'] = "5,0,0,5"
         bullet_text.attributes['Grid.Row'] = str(i)
         bullet_text.attributes['Grid.Column'] = '1'
-        bullet_text.attributes['Margin'] = "5,0,0,0"
         para = get_sl_paragraph()
         del para.attributes['Margin']
         para.children.append(TextNode(item))
