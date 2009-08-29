@@ -84,6 +84,16 @@ The development version of rst2xaml is hosted on a google project page:
 CHANGELOG
 ---------
 
+
+2009/08/29 Version 0.1.1
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bottom margin on list items increased.
+
+Addition of xclass option for the Silverlight XAML, for use from
+`Try Python <http://www.trypython.org>`_.
+
+
 2009/08/20 Version 0.1.0
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
