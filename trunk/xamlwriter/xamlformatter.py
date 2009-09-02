@@ -56,10 +56,10 @@ class XamlFormatter(Formatter):
         source = self._format_lines(tokensource)
         
         if self.flowdocument:
-            start = '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">'
+            start = '<Paragraph FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" xml:space="preserve">'
             end = '</Paragraph>'
         else:
-            start = '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15" Margin="15,10,0,0">'
+            start = '<TextBlock FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" FontSize="15" Margin="15,10,0,0">'
             end = '</TextBlock>'
             
         outfile.write(start)
