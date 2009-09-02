@@ -9,7 +9,9 @@ from xamlwriter.utils import escape_xaml
 
 
 FONT_SIZE = '15'
-MARGIN = "16,0,0,0"
+MARGIN = "16,0,0,0" 
+FONTS = 'Verdana,Tahoma,Geneva,Lucida Grande,Trebuchet MS,Helvetica,Arial,Serif'
+MONOSPACE = "Consolas, Monaco, Lucida Console, Global Monospace"
 
 class XamlTranslator(NodeVisitor):
 
@@ -82,14 +84,14 @@ class XamlTranslator(NodeVisitor):
         'emphasis': ('Italic', {}),
         'strong': ('Bold', {}),
         'block_quote': ('Section', {'Margin': MARGIN}),
-        'literal_block': ('Paragraph', {'FontFamily': 'Consolas, Global Monospace', 
+        'literal_block': ('Paragraph', {'FontFamily': 'Consolas, Monaco, Lucida Console, Global Monospace', 
                                         'xml:space': 'preserve'}),
         'superscript': ('Run', {'Typography.Variants': 'Superscript'}),
         'line_block': ('Paragraph', {}), 
         'bullet_list': ('List', {}),
         'list_item': ('ListItem', {}),
         'enumerated_list': ('List', {'MarkerStyle': 'Decimal'}),
-        'literal': ('Run', {'FontFamily': 'Consolas, Global Monospace', 
+        'literal': ('Run', {'FontFamily': 'Consolas, Monaco, Lucida Console, Global Monospace', 
                             'xml:space': 'preserve'})
     }
     
@@ -135,7 +137,7 @@ class XamlTranslator(NodeVisitor):
     
     def visit_paragraph(self, node):
         # Silverlight only
-        attrs = {'FontSize': FONT_SIZE, 'TextWrapping': "Wrap"}
+        attrs = {'FontSize': FONT_SIZE, 'TextWrapping': "Wrap", 'FontFamily': FONTS}
         if self.done_first_item:
             attrs['Margin'] = "0,10,0,0"
         self.begin_node(node, 'TextBlock', **attrs)
@@ -146,7 +148,7 @@ class XamlTranslator(NodeVisitor):
     
     def visit_line_block(self, node):
         # Silverlight only
-        self.begin_node(node, 'TextBlock', Margin= "0,10,0,0", FontSize=FONT_SIZE, TextWrapping="Wrap")
+        self.begin_node(node, 'TextBlock', Margin= "0,10,0,0", FontSize=FONT_SIZE, TextWrapping="Wrap", FontFamily=FONTS)
         
     def depart_line_block(self, node):
         if self.curnode.children[-1] == Node('LineBreak'):
@@ -167,6 +169,7 @@ class XamlTranslator(NodeVisitor):
         if not self.flowdocument:
             node_type = 'TextBlock'
             attrs['Margin'] = '0,10,0,0'
+            attrs['FontFamily'] = FONTS
         if isinstance(node.parent, nodes.document):
             begun = True
             self.begin_node(node, node_type, FontSize='20', FontWeight='Bold', **attrs)
@@ -202,6 +205,7 @@ class XamlTranslator(NodeVisitor):
             if not self.flowdocument:
                 node_type = 'TextBlock'
                 attrs['Margin'] = '0,10,0,0'
+                attrs['FontFamily'] = FONTS
             self.begin_node(node, node_type, FontSize='19',
                             FontStyle='Italic', **attrs)
             begun = True
@@ -218,7 +222,7 @@ class XamlTranslator(NodeVisitor):
         # only used for Silverlight
         self.in_literal = True
         self.begin_node(node, 'TextBlock', Margin="15,10,0,0", FontSize="15",
-                        TextWrapping="Wrap", FontFamily="Consolas, Global Monospace")
+                        TextWrapping="Wrap", FontFamily=MONOSPACE)
         
     def depart_literal_block(self, node):
         self.in_literal = False
@@ -255,7 +259,7 @@ class XamlTranslator(NodeVisitor):
         if not self.bullet_list:
             point = str(self.list_item + 1) + '.'
         self.add_node('TextBlock', point, escape=False, 
-                      **{'Grid.Column': '0', 'Grid.Row': str(self.list_item)})
+                      **{'Grid.Column': '0', 'Grid.Row': str(self.list_item), 'FontFamily': FONTS})
         self.begin_node(node, 'StackPanel', Margin="5,0,0,5",
                       **{'Grid.Column': '1', 'Grid.Row': str(self.list_item)})
         self.list_item += 1
@@ -267,7 +271,7 @@ class XamlTranslator(NodeVisitor):
     def visit_literal(self, node):
         # only used for Silverlight
         self.in_literal = True
-        self.begin_node(node, 'Run', FontFamily='Consolas, Global Monospace')
+        self.begin_node(node, 'Run', FontFamily='Consolas, Monaco, Lucida Console, Global Monospace')
     
     def depart_literal(self, node):
         self.in_literal = False

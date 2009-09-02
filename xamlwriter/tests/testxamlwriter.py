@@ -3,7 +3,7 @@ from textwrap import dedent
 from docutils.core import publish_string
 
 from xamlwriter.node import Node, TextNode
-from xamlwriter.translator import FONT_SIZE, MARGIN
+from xamlwriter.translator import FONT_SIZE, MARGIN, FONTS, MONOSPACE
 from xamlwriter.writer import XamlWriter, publish_xaml
 
 
@@ -49,6 +49,7 @@ def get_sl_paragraph():
     para.attributes['FontSize'] = FONT_SIZE
     para.attributes['Margin'] = "0,10,0,0"
     para.attributes['TextWrapping'] = "Wrap"
+    para.attributes['FontFamily'] = FONTS
     return para
 
 def get_grid_sl(items, enumerated=True):
@@ -73,6 +74,7 @@ def get_grid_sl(items, enumerated=True):
             point = str(i + 1) + '.'
         bullet.attributes['Grid.Row'] = str(i)
         bullet.attributes['Grid.Column'] = '0'
+        bullet.attributes['FontFamily'] = FONTS
         bullet.children.append(TextNode(point))
                                
         bullet_text = Node('StackPanel')
@@ -167,7 +169,7 @@ class TestXamlWriter(unittest.TestCase):
     def testLiteralBlock(self):
         node = get_root()
         literal = Node('Paragraph')
-        literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
+        literal.attributes['FontFamily'] = MONOSPACE
         literal.attributes['xml:space'] = 'preserve'
         node.children.append(literal)
         literal.children.append(TextNode('foo'))
@@ -257,7 +259,7 @@ class TestXamlWriter(unittest.TestCase):
         node = get_root()
         para = Node('Paragraph')
         literal = Node('Run')
-        literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
+        literal.attributes['FontFamily'] = MONOSPACE
         literal.attributes['xml:space'] = 'preserve'
         para.children.append(literal)
         literal.children.append(TextNode('foo  bar'))
@@ -384,7 +386,7 @@ class TestSilverlightXaml(unittest.TestCase):
         
         literal = get_sl_paragraph()
         literal.attributes['Margin'] = "15,10,0,0"
-        literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
+        literal.attributes['FontFamily'] = MONOSPACE
         # XXXX do we want the literal paragraph (TextBlock) to have NoWrap set?
         node.children.append(literal)
         
@@ -436,7 +438,7 @@ class TestSilverlightXaml(unittest.TestCase):
         node = get_root_sl()
         para = get_sl_paragraph()
         literal = Node('Run')
-        literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
+        literal.attributes['FontFamily'] = MONOSPACE
         para.children.append(literal)
         literal.children.append(TextNode('foo&#160;&#160;bar'))
         node.children.append(para)
@@ -451,6 +453,7 @@ class TestSilverlightXaml(unittest.TestCase):
             if FontWeight is not None:
                 node.attributes['FontWeight'] = FontWeight
             node.attributes['Margin'] = "0,10,0,0"
+            node.attributes['FontFamily'] = FONTS
             if FontStyle is not None:
                 node.attributes['FontStyle'] = FontStyle
             node.attributes['FontSize'] = str(fontsize)

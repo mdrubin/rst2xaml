@@ -15,14 +15,14 @@ def make_source(string):
 def make_doc(string):
     return ('<FlowDocument FontSize="15" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
             'xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">'
-            '<Paragraph FontFamily="Consolas, Global Monospace" xml:space="preserve">%s'
+            '<Paragraph FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" xml:space="preserve">%s'
             '</Paragraph></FlowDocument>' % string)
 
 def make_doc_sl(string):
     return ('<StackPanel x:Class="System.Windows.Controls.StackPanel" '
             'xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
             'xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">'
-            '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15" Margin="15,10,0,0">'
+            '<TextBlock FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" FontSize="15" Margin="15,10,0,0">'
             '%s</TextBlock></StackPanel>') % string
 
 class TestPygments(unittest.TestCase):
