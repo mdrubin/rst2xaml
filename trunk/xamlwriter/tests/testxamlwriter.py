@@ -383,6 +383,7 @@ class TestSilverlightXaml(unittest.TestCase):
         node = get_root_sl()
         
         literal = get_sl_paragraph()
+        literal.attributes['Margin'] = "15,10,0,0"
         literal.attributes['FontFamily'] = 'Consolas, Global Monospace'
         # XXXX do we want the literal paragraph (TextBlock) to have NoWrap set?
         node.children.append(literal)

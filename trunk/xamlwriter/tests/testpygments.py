@@ -22,7 +22,7 @@ def make_doc_sl(string):
     return ('<StackPanel x:Class="System.Windows.Controls.StackPanel" '
             'xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
             'xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">'
-            '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15" Margin="0,10,0,0">'
+            '<TextBlock FontFamily="Consolas, Global Monospace" FontSize="15" Margin="15,10,0,0">'
             '%s</TextBlock></StackPanel>') % string
 
 class TestPygments(unittest.TestCase):
