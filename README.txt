@@ -84,6 +84,15 @@ The development version of rst2xaml is hosted on a google project page:
 CHANGELOG
 ---------
 
+2009/09/XX Version X.X.X
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pygments code blocks and literal blocks are indented to the right in the
+Silverlight output.
+
+BUGFIX: In the pygments formatter unknown tokens are now based on their parents,
+as they always should have been...
+
 
 2009/08/29 Version 0.1.1
 ~~~~~~~~~~~~~~~~~~~~~~~~
