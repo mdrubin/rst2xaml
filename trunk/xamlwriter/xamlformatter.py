@@ -81,6 +81,9 @@ class XamlFormatter(Formatter):
         lspan = ''
         line = ''
         for ttype, value in tokensource:
+            while ttype not in self.styles:
+                ttype = ttype.parent
+
             cspan = '<Run%s>' % self.styles[ttype]
             
             value = escape_xaml(value)
