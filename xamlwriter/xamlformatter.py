@@ -12,9 +12,10 @@ class XamlFormatter(Formatter):
     aliases = ['xaml']
     filenames = ['*.xaml']
 
-    def __init__(self, flowdocument=True, **options):
+    def __init__(self, flowdocument=True, store_code_blocks=False, **options):
         Formatter.__init__(self, **options)
         self.flowdocument = flowdocument
+        self.store_code_blocks = store_code_blocks
         
         self.linenos = 0
         if flowdocument:
@@ -62,10 +63,17 @@ class XamlFormatter(Formatter):
             start = '<TextBlock FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" FontSize="15" Margin="15,10,0,0">'
             end = '</TextBlock>'
             
+        if self.store_code_blocks:
+            end = end + '<Button  Margin="10,10,0,10" Padding="0" FontWeight="Bold" Height="20" FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" FontSize="15" Foreground="#000080" Content="&#160;&gt;&gt;&gt;&#160;" Width="40" HorizontalAlignment="Left" />'
+            
         outfile.write(start)
+        previous_piece = None
         for t, piece in source:
-            outfile.write(piece)
-        
+            if previous_piece is not None:
+                outfile.write(previous_piece)
+            previous_piece = piece
+        if previous_piece is not None:
+            outfile.write(previous_piece[:-len(self.lineseparator)])
         outfile.write(end)
             
 

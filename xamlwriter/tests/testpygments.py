@@ -25,6 +25,14 @@ def make_doc_sl(string):
             '<TextBlock FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" FontSize="15" Margin="15,10,0,0">'
             '%s</TextBlock></StackPanel>') % string
 
+def make_doc_with_store_code_block(string):
+    return ('<StackPanel x:Class="System.Windows.Controls.StackPanel" '
+            'xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" '
+            'xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">'
+            '<TextBlock FontFamily="Consolas, Monaco, Lucida Console, Global Monospace" FontSize="15" Margin="15,10,0,0">'
+            '%s</TextBlock></StackPanel>') % string
+    
+
 class TestPygments(unittest.TestCase):
     
     def testComment(self):
@@ -56,21 +64,17 @@ class TestPygments(unittest.TestCase):
             xamlwriter.register_directive.flowdocument = True
 
 
-    def DONTtestClass(self):
-        source = make_source("""\
-        import foo
-        
-        assert something
-        
-        class Foo(object):
-            def method(self, arg1, arg2=None):
-                if a == b:
-                    return 3
-                
-                raise Exception("Weird error")
-        """)
-        
-        print publish_xaml(source)
+    def testStoreCodeBlocks(self):
+        try:
+            from xamlwriter import register_directive
+            register_directive.store_code_blocks = True
+            register_directive.code_blocks = []
+            self.fail()
+        finally:
+            register_directive.store_code_blocks = False
+            register_directive.code_blocks = []
+            
+
 
 
 
